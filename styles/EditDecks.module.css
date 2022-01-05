@@ -2,6 +2,16 @@
   padding: 0 2rem;
 }
 
+.breadcrumb {
+  padding: 20px;
+  margin: "16px 10";
+}
+
+.item {
+  padding: 20;
+  min-height: "122px";
+}
+
 .main {
   min-height: 100vh;
   padding: 4rem 0;
@@ -42,7 +52,9 @@
 .title {
   margin: 0;
   line-height: 1.15;
-  font-size: 4rem;
+  padding: 20px;
+  font-size: 2rem;
+  border: 1px solid #eaeaea;
 }
 
 .title,
@@ -54,6 +66,12 @@
   margin: 4rem 0;
   line-height: 1.5;
   font-size: 1.5rem;
+}
+
+.addcard {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
 }
 
 .code {
@@ -74,23 +92,34 @@
 }
 
 .card {
-  margin: 1rem;
-  padding: 1.5rem;
-  text-align: left;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
   color: inherit;
   text-decoration: none;
   border: 1px solid #eaeaea;
   border-radius: 10px;
   transition: color 0.15s ease, border-color 0.15s ease;
-  max-width: 300px;
 }
 
-.card:hover,
-.card:focus,
-.card:active {
+.cards {
+  display: flex;
+  margin: 10px;
+  flex-direction: column;
+  color: inherit;
+  text-decoration: none;
+  border: 1px solid #eaeaea;
+  border-radius: 10px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+/* .cards:hover,
+.cards:focus,
+.cards:active {
   color: #0070f3;
   border-color: #0070f3;
-}
+} */
 
 .card h2 {
   margin: 0 0 1rem 0;
@@ -103,6 +132,11 @@
   line-height: 1.5;
 }
 
+.items {
+  padding: 5;
+  min-height: "300px";
+}
+
 .logo {
   height: 1em;
   margin-left: 0.5rem;
@@ -113,4 +147,14 @@
     width: 100%;
     flex-direction: column;
   }
+}
+
+.logo {
+  height: 32px;
+  margin: 16px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.site-layout .site-layout-background {
+  background: #fff;
 }
