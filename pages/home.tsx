@@ -1,19 +1,20 @@
+import { useState } from "react";
 import type { NextPage } from "next";
 import { Layout, Menu, Breadcrumb, Button, Row } from "antd";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import Head from "next/head";
-import { PrismaClient } from "@prisma/client";
 import { Typography } from "antd";
+import { ClassForDecks } from "@prisma/client";
+import { useQuery } from "react-query";
 import styles from "../styles/EditDecks.module.css";
+import { getClasses } from "../src/api/classes";
 
 const { Title } = Typography;
 
 const { Header, Content, Footer, Sider } = Layout;
 
-const prisma = new PrismaClient();
-
 export async function getServerSideProps() {
-  const classesForDecks = await prisma.classForDecks.findMany();
+  const classesForDecks = await getClasses();
   console.log({ classesForDecks });
   return {
     props: {
@@ -22,8 +23,24 @@ export async function getServerSideProps() {
   };
 }
 
-const Home: NextPage = ({ classesForDecks }: any) => {
+type HomeProps = { classesForDecks: ClassForDecks[] };
+
+const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
   console.log({ classesForDecks });
+  const { data: classesData } = useQuery(
+    "classes",
+    async () => {
+      const classesForDecks = await getClasses();
+      return classesForDecks;
+    },
+    {
+      initialData: classesForDecks as any,
+    }
+  );
+  const [selectedClass, setSelectedClass] = useState(
+    classesForDecks?.length ? classesForDecks[0] : null
+  );
+
   return (
     <Layout>
       <Head>
@@ -45,11 +62,9 @@ const Home: NextPage = ({ classesForDecks }: any) => {
               </Title>
             </Button>
           </div>
-          <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
-            <Menu.Item key="1">Hardcoded Class</Menu.Item>
-
-            {classesForDecks &&
-              classesForDecks.map((item, index) => (
+          <Menu theme="dark" defaultSelectedKeys={["0"]} mode="inline">
+            {classesData?.length &&
+              classesData.map((item, index) => (
                 <Menu.Item key={index}>{item.name}</Menu.Item>
               ))}
           </Menu>
@@ -57,7 +72,7 @@ const Home: NextPage = ({ classesForDecks }: any) => {
         <Content className={styles.content}>
           <Row align="middle" justify="space-between">
             <Breadcrumb className={styles.breadcrumb}>
-              <Breadcrumb.Item>Class Name</Breadcrumb.Item>
+              <Breadcrumb.Item>{selectedClass?.name}</Breadcrumb.Item>
             </Breadcrumb>
             <Button
               danger
@@ -67,7 +82,7 @@ const Home: NextPage = ({ classesForDecks }: any) => {
               Delete Class
             </Button>
           </Row>
-          <div>CONTENT</div>
+          <div>{selectedClass?.name}</div>
         </Content>
       </Layout>
       <Footer style={{ textAlign: "center" }}>
