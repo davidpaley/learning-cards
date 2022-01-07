@@ -34,7 +34,7 @@ model ClassForDecks {
 
 model Deck {
   id   String     @id @default(cuid())
-  class ClassForDecks @relation(fields: [classId], references:[id])
+  classOfDeck ClassForDecks @relation(fields: [classId], references:[id])
   classId String
   name String
   cards Card[]

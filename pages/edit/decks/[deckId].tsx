@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import { PrismaClient } from "@prisma/client";
 import styles from "../../../styles/EditDecks.module.css";
 
 import { Layout, Menu, Breadcrumb, Card, Button, Input, Row } from "antd";
@@ -7,6 +8,17 @@ import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { TextArea } = Input;
+// const prisma = new PrismaClient();
+
+// export async function getServerSideProps() {
+//   const classesForCards = await prisma.
+//   console.log({ classesForCards });
+//   return {
+//     props: {
+//       classesForDecks: JSON.parse(JSON.stringify(classesForCards)),
+//     },
+//   };
+// }
 
 const Home: NextPage = () => {
   const onChange = (e) => {
