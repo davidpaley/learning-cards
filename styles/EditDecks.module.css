@@ -13,7 +13,7 @@
   border: 1px solid #eaeaea;
 }
 
-.addCard {
+.sideButtonContainer {
   display: flex;
   justify-content: center;
   padding-top: 20px;
@@ -82,3 +82,20 @@
 .deleteCardButton {
   margin-right: 25px;
 }
+
+.content {
+  height: 100vh
+}
+/* =========================== */
+.createNewClass {
+  color: white;
+  display: flex;
+  justify-content: space-around;
+  align-items: baseline;
+}
+
+.createClassTitle {
+  color: white !important;
+  margin-left: 1rem;
+}
+

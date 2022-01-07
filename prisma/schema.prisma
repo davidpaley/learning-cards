@@ -18,26 +18,46 @@ datasource db {
 
 model User {
   email String @id @unique
-  decks Deck[]
+  classes ClassForDecks[]
 }
 
-model Deck {
+model ClassForDecks {
   id   String     @id @default(cuid())
   user User @relation(fields: [userEmail], references:[email])
   userEmail String
   name String
-  cards Cards[]
+  decks Deck[]
   creationDate DateTime @default(now())
   @@unique([userEmail, name])
 }
 
-model Cards {
+
+model Deck {
+  id   String     @id @default(cuid())
+  class ClassForDecks @relation(fields: [classId], references:[id])
+  classId String
+  name String
+  cards Card[]
+  creationDate DateTime @default(now())
+  @@unique([classId, name])
+}
+
+model Card {
   id String @id @default(cuid())
+  
   question String
   answer String
+  
+  videoQuestion String?
+  videoAnswer String?
+  imageQuestion String?
+  imageAnswer String?
+  
   deck Deck @relation(fields: [deckId], references: [id])
   deckId String
+  
   creationDate DateTime @default(now())
+  
   nextReviewDate DateTime
   level Int
 }

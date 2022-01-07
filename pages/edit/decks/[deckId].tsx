@@ -39,7 +39,7 @@ const Home: NextPage = () => {
               />
             </Menu.Item>
           </Menu>
-          <div className={styles.addCard}>
+          <div className={styles.sideButtonContainer}>
             <Button
               type="text"
               className={styles.createNewCardButton}
