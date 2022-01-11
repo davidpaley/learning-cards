@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import type { NextPage } from "next";
 import { PrismaClient } from "@prisma/client";
 import styles from "../../../styles/EditDecks.module.css";
@@ -8,48 +9,70 @@ import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { TextArea } = Input;
-// const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
-// export async function getServerSideProps() {
-//   const classesForCards = await prisma.
-//   console.log({ classesForCards });
-//   return {
-//     props: {
-//       classesForDecks: JSON.parse(JSON.stringify(classesForCards)),
-//     },
-//   };
-// }
+export async function getServerSideProps(context) {
+  const { query } = context;
+  const deck = await prisma.deck.findUnique({
+    where: {
+      id: query.deckId,
+    },
+    select: {
+      cards: true,
+      name: true,
+      classOfDeck: true,
+    },
+  });
+  return {
+    props: {
+      deck: JSON.parse(JSON.stringify(deck)),
+    },
+  };
+}
 
-const Home: NextPage = () => {
+const Home: NextPage = ({ deck }: any) => {
+  const [selectedCard, setSelectedCard] = useState(
+    deck?.length ? deck[0] : null
+  );
   const onChange = (e) => {
     console.log("Change:", e.target.value);
   };
+
+  const cardSelected = (event) => {
+    const cardSelected = deck.cards.find((card) => card.id === event.key);
+    setSelectedCard(cardSelected);
+  };
+
   return (
     <Layout>
       <Header />
       <Layout>
         <Sider>
-          <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
-            <Menu.Item key="1" style={{ padding: 5, minHeight: "150px" }}>
-              {/* <Button
+          <Menu
+            theme="dark"
+            defaultSelectedKeys={["1"]}
+            mode="inline"
+            onClick={cardSelected}
+          >
+            {deck.cards &&
+              deck.cards.map((card, index) => (
+                <Menu.Item
+                  key={card.id}
+                  style={{ padding: 5, minHeight: "150px" }}
+                >
+                  <Card
+                    title={card.question}
+                    bordered={false}
+                    className={styles.cards}
+                  />
+                  {/* <Button
                   type="ghost"
                   shape="circle"
                   className={styles.deleteCardButton}
                   icon={<DeleteOutlined />}
                 /> */}
-              <Card
-                title="Card title 1"
-                bordered={false}
-                className={styles.cards}
-              />
-            </Menu.Item>
-            <Menu.Item key="2" style={{ padding: 5, minHeight: "150px" }}>
-              <Card
-                title="Card title 2"
-                bordered={false}
-                className={styles.cards}
-              />
-            </Menu.Item>
+                </Menu.Item>
+              ))}
           </Menu>
           <div className={styles.sideButtonContainer}>
             <Button
@@ -64,9 +87,9 @@ const Home: NextPage = () => {
         <Content>
           <Row align="middle" justify="space-between">
             <Breadcrumb className={styles.breadcrumb}>
-              <Breadcrumb.Item>Name of the Class</Breadcrumb.Item>
-              <Breadcrumb.Item>Name of the Deck</Breadcrumb.Item>
-              <Breadcrumb.Item>Card1</Breadcrumb.Item>
+              <Breadcrumb.Item>{deck.classOfDeck.name}</Breadcrumb.Item>
+              <Breadcrumb.Item>{deck.name}</Breadcrumb.Item>
+              {/* <Breadcrumb.Item>{selectedCard.id}</Breadcrumb.Item> */}
             </Breadcrumb>
             <Button
               danger
@@ -85,6 +108,7 @@ const Home: NextPage = () => {
                   className={styles.questionText}
                   onChange={onChange}
                   rows={10}
+                  value={selectedCard.question}
                 />
               </div>
               <div className={styles.textarea}>
@@ -93,6 +117,7 @@ const Home: NextPage = () => {
                   className={styles.answerText}
                   onChange={onChange}
                   rows={20}
+                  value={selectedCard.answer}
                 />
               </div>
             </div>
