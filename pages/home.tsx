@@ -8,6 +8,8 @@ import { ClassForDecks } from "@prisma/client";
 import { useQuery } from "react-query";
 import styles from "../styles/EditDecks.module.css";
 import { getClasses } from "../src/api/classes";
+import CreateClassModal from "../src/home/CreateClassModal";
+import { CLASSES_QUERY } from "../src/constants";
 
 const { Title } = Typography;
 
@@ -15,7 +17,7 @@ const { Header, Content, Footer, Sider } = Layout;
 
 export async function getServerSideProps() {
   const classesForDecks = await getClasses();
-  console.log({ classesForDecks });
+
   return {
     props: {
       classesForDecks: JSON.parse(JSON.stringify(classesForDecks)),
@@ -26,9 +28,8 @@ export async function getServerSideProps() {
 type HomeProps = { classesForDecks: ClassForDecks[] };
 
 const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
-  console.log({ classesForDecks });
-  const { data: classesData } = useQuery(
-    "classes",
+  const { data: classes } = useQuery(
+    [CLASSES_QUERY],
     async () => {
       const classesForDecks = await getClasses();
       return classesForDecks;
@@ -40,6 +41,11 @@ const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
   const [selectedClass, setSelectedClass] = useState(
     classesForDecks?.length ? classesForDecks[0] : null
   );
+  const changeSelectedClass = (newClassSelected: ClassForDecks) =>
+    setSelectedClass(newClassSelected);
+
+  const [isCreateClassModalVisible, setIsCreateClassModalVisible] =
+    useState(false);
 
   return (
     <Layout>
@@ -56,6 +62,7 @@ const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
               type="text"
               className={styles.createNewClass}
               icon={<PlusOutlined />}
+              onClick={() => setIsCreateClassModalVisible(true)}
             >
               <Title className={styles.createClassTitle} level={5}>
                 Your Classes
@@ -63,9 +70,14 @@ const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
             </Button>
           </div>
           <Menu theme="dark" defaultSelectedKeys={["0"]} mode="inline">
-            {classesData?.length &&
-              classesData.map((item, index) => (
-                <Menu.Item key={index}>{item.name}</Menu.Item>
+            {classes?.length &&
+              classes.map((item, index) => (
+                <Menu.Item
+                  key={index}
+                  onClick={() => changeSelectedClass(item)}
+                >
+                  {item.name}
+                </Menu.Item>
               ))}
           </Menu>
         </Sider>
@@ -88,6 +100,10 @@ const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
       <Footer style={{ textAlign: "center" }}>
         Ant Design ©2018 Created by Ant UED
       </Footer>
+      <CreateClassModal
+        close={() => setIsCreateClassModalVisible(false)}
+        visible={isCreateClassModalVisible}
+      />
     </Layout>
   );
 };
