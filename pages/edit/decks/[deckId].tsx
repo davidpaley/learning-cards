@@ -1,11 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import { PrismaClient } from "@prisma/client";
 import styles from "../../../styles/EditDecks.module.css";
+import { useQuery } from "react-query";
+import { getDeck } from "../../../src/api/decks";
+import { DECK_QUERY } from "../../../src/constants";
 
-import { Layout, Menu, Breadcrumb, Card, Button, Input, Row } from "antd";
+import {
+  Layout,
+  Menu,
+  Breadcrumb,
+  Card,
+  Button,
+  Input,
+  Row,
+  Form,
+  Divider,
+} from "antd";
 
-import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import { DeleteOutlined, PlusOutlined, SaveOutlined } from "@ant-design/icons";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { TextArea } = Input;
@@ -31,18 +44,36 @@ export async function getServerSideProps(context) {
 }
 
 const Home: NextPage = ({ deck }: any) => {
-  const [selectedCard, setSelectedCard] = useState(
-    deck?.length ? deck[0] : null
+  const { data: deckForCards } = useQuery(
+    [DECK_QUERY],
+    async () => {
+      const deckResponse = await getDeck(deck.id);
+      return deckResponse;
+    },
+    {
+      initialData: deck as any,
+    }
   );
-  const onChange = (e) => {
-    console.log("Change:", e.target.value);
+
+  const [selectedCard, setSelectedCard] = useState(
+    deck?.cards?.length ? deck?.cards[0] : null
+  );
+
+  const [form] = Form.useForm();
+  useEffect(() => form.resetFields(), [deck, selectedCard]);
+
+  const handleFormSubmit = (value) => {
+    //console.log("Change:", JSON.parse(JSON.stringify(value)));
+    console.log({ answer: JSON.parse(JSON.stringify(value.answer)) });
+    console.log({ question: JSON.parse(JSON.stringify(value.question)) });
   };
 
   const cardSelected = (event) => {
-    const cardSelected = deck.cards.find((card) => card.id === event.key);
+    const cardSelected = deckForCards.cards.find(
+      (card) => card.id === event.key
+    );
     setSelectedCard(cardSelected);
   };
-
   return (
     <Layout>
       <Header />
@@ -50,29 +81,31 @@ const Home: NextPage = ({ deck }: any) => {
         <Sider>
           <Menu
             theme="dark"
-            defaultSelectedKeys={["1"]}
+            defaultSelectedKeys={[selectedCard?.id]}
             mode="inline"
             onClick={cardSelected}
           >
-            {deck.cards &&
-              deck.cards.map((card, index) => (
-                <Menu.Item
-                  key={card.id}
-                  style={{ padding: 5, minHeight: "150px" }}
-                >
-                  <Card
-                    title={card.question}
-                    bordered={false}
-                    className={styles.cards}
-                  />
-                  {/* <Button
+            {deckForCards.cards &&
+              deckForCards.cards.map((card, index) => {
+                return (
+                  <Menu.Item
+                    key={card.id}
+                    style={{ padding: 5, minHeight: "150px" }}
+                  >
+                    <Card
+                      title={card.question}
+                      bordered={false}
+                      className={styles.cards}
+                    />
+                    {/* <Button
                   type="ghost"
                   shape="circle"
                   className={styles.deleteCardButton}
                   icon={<DeleteOutlined />}
                 /> */}
-                </Menu.Item>
-              ))}
+                  </Menu.Item>
+                );
+              })}
           </Menu>
           <div className={styles.sideButtonContainer}>
             <Button
@@ -87,8 +120,8 @@ const Home: NextPage = ({ deck }: any) => {
         <Content>
           <Row align="middle" justify="space-between">
             <Breadcrumb className={styles.breadcrumb}>
-              <Breadcrumb.Item>{deck.classOfDeck.name}</Breadcrumb.Item>
-              <Breadcrumb.Item>{deck.name}</Breadcrumb.Item>
+              <Breadcrumb.Item>{deckForCards.name}</Breadcrumb.Item>
+              <Breadcrumb.Item>{deckForCards.name}</Breadcrumb.Item>
               {/* <Breadcrumb.Item>{selectedCard.id}</Breadcrumb.Item> */}
             </Breadcrumb>
             <Button
@@ -100,27 +133,39 @@ const Home: NextPage = ({ deck }: any) => {
             </Button>
           </Row>
           <div>
-            <div className={styles.card}>
-              <div className={styles.textarea}>
-                <TextArea
+            <Form
+              className={styles.card}
+              form={form}
+              onFinish={handleFormSubmit}
+              initialValues={{
+                question: selectedCard?.question,
+                answer: selectedCard?.answer,
+              }}
+              // preserve={false}
+            >
+              <Form.Item name="question">
+                <Input.TextArea
                   maxLength={1000}
-                  style={{ padding: 10 }}
                   className={styles.questionText}
-                  onChange={onChange}
                   rows={10}
-                  value={selectedCard.question}
                 />
-              </div>
-              <div className={styles.textarea}>
-                <TextArea
+              </Form.Item>
+              <Divider />
+              <Form.Item name="answer">
+                <Input.TextArea
                   maxLength={1000}
                   className={styles.answerText}
-                  onChange={onChange}
                   rows={20}
-                  value={selectedCard.answer}
                 />
-              </div>
-            </div>
+              </Form.Item>
+              <Button
+                className={styles.saveEditButton}
+                icon={<SaveOutlined />}
+                onClick={() => form.submit()}
+              >
+                Save Card
+              </Button>
+            </Form>
           </div>
         </Content>
       </Layout>
