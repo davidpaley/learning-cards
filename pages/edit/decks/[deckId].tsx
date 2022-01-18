@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import { PrismaClient } from "@prisma/client";
 import styles from "../../../styles/EditDecks.module.css";
-import { useQuery } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import { getDeck } from "../../../src/api/decks";
-import { DECK_QUERY } from "../../../src/constants";
+import { CARD_QUERY } from "../../../src/constants";
 
 import {
   Layout,
@@ -19,9 +19,9 @@ import {
 } from "antd";
 
 import { DeleteOutlined, PlusOutlined, SaveOutlined } from "@ant-design/icons";
+import { CreateOrUpdateCard, createOrUpdateCard } from "../../../src/api/cards";
 
 const { Header, Content, Footer, Sider } = Layout;
-const { TextArea } = Input;
 const prisma = new PrismaClient();
 
 export async function getServerSideProps(context) {
@@ -44,14 +44,40 @@ export async function getServerSideProps(context) {
 }
 
 const Home: NextPage = ({ deck }: any) => {
+  const queryClient = useQueryClient();
   const { data: deckForCards } = useQuery(
-    [DECK_QUERY],
+    [CARD_QUERY],
     async () => {
       const deckResponse = await getDeck(deck.id);
       return deckResponse;
     },
     {
       initialData: deck as any,
+    }
+  );
+
+  const {
+    isLoading,
+    error,
+    mutate: handleCreateOrUpdateCard,
+  } = useMutation(
+    async (cardObject: CreateOrUpdateCard) => {
+      const response = await createOrUpdateCard(cardObject);
+      const data = await response.json();
+      return data;
+    },
+    {
+      onError: (err) => {
+        console.log(err);
+      },
+      // Always refetch after error or success:
+      onSettled: () => {
+        queryClient.invalidateQueries([CARD_QUERY]);
+      },
+
+      onSuccess: () => {
+        //ver que hago si es success
+      },
     }
   );
 
@@ -63,9 +89,7 @@ const Home: NextPage = ({ deck }: any) => {
   useEffect(() => form.resetFields(), [deck, selectedCard]);
 
   const handleFormSubmit = (value) => {
-    //console.log("Change:", JSON.parse(JSON.stringify(value)));
-    console.log({ answer: JSON.parse(JSON.stringify(value.answer)) });
-    console.log({ question: JSON.parse(JSON.stringify(value.question)) });
+    handleCreateOrUpdateCard({ ...value, selectedCard });
   };
 
   const cardSelected = (event) => {
@@ -141,7 +165,6 @@ const Home: NextPage = ({ deck }: any) => {
                 question: selectedCard?.question,
                 answer: selectedCard?.answer,
               }}
-              // preserve={false}
             >
               <Form.Item name="question">
                 <Input.TextArea

@@ -14,7 +14,6 @@ export default async (
 ) => {
   if (req.method === "POST") {
     const deck = JSON.parse(req.body);
-
     const saveDeck = await prisma.deck.create({
       data: deck,
     });
