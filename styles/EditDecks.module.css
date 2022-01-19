@@ -84,9 +84,14 @@
 }
 
 .content {
-  height: 100vh
+  height: 100vh;
 }
 /* =========================== */
+
+.classContent {
+  height: 100vh;
+  padding: 25px;
+}
 .createNewClass {
   color: white;
   display: flex;
@@ -98,4 +103,15 @@
   color: white !important;
   margin-left: 1rem;
 }
+.classList {
+  width: 100%;
+  /* display: flex; */
+}
+.classListItem:hover {
+  background-color: #eef7ff;
+  cursor: pointer;
+}
 
+/* .classDeckListTitle {
+  font-size: 100px;
+} */

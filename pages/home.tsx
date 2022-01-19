@@ -1,15 +1,30 @@
 import { useState } from "react";
 import type { NextPage } from "next";
-import { Layout, Menu, Breadcrumb, Button, Row } from "antd";
-import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  Layout,
+  Menu,
+  Breadcrumb,
+  Button,
+  Row,
+  List,
+  Divider,
+  Space,
+} from "antd";
+import {
+  DeleteOutlined,
+  PlusOutlined,
+  PlayCircleOutlined,
+  EditOutlined,
+} from "@ant-design/icons";
 import Head from "next/head";
 import { Typography } from "antd";
-import { ClassForDecks } from "@prisma/client";
+import { ClassForDecks, Deck } from "@prisma/client";
 import { useQuery } from "react-query";
 import styles from "../styles/EditDecks.module.css";
 import { getClasses } from "../src/api/classes";
 import CreateClassModal from "../src/home/CreateClassModal";
 import { CLASSES_QUERY } from "../src/constants";
+import React from "react";
 
 const { Title } = Typography;
 
@@ -25,7 +40,11 @@ export async function getServerSideProps() {
   };
 }
 
-type HomeProps = { classesForDecks: ClassForDecks[] };
+interface ClassProp extends ClassForDecks {
+  decks: Deck[];
+}
+
+type HomeProps = { classesForDecks: ClassProp[] };
 
 const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
   const { data: classes } = useQuery(
@@ -38,10 +57,10 @@ const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
       initialData: classesForDecks as any,
     }
   );
-  const [selectedClass, setSelectedClass] = useState(
+  const [selectedClass, setSelectedClass] = useState<ClassProp>(
     classesForDecks?.length ? classesForDecks[0] : null
   );
-  const changeSelectedClass = (newClassSelected: ClassForDecks) =>
+  const changeSelectedClass = (newClassSelected: ClassProp) =>
     setSelectedClass(newClassSelected);
 
   const [isCreateClassModalVisible, setIsCreateClassModalVisible] =
@@ -81,7 +100,7 @@ const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
               ))}
           </Menu>
         </Sider>
-        <Content className={styles.content}>
+        <Content className={styles.classContent}>
           <Row align="middle" justify="space-between">
             <Breadcrumb className={styles.breadcrumb}>
               <Breadcrumb.Item>{selectedClass?.name}</Breadcrumb.Item>
@@ -94,7 +113,68 @@ const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
               Delete Class
             </Button>
           </Row>
-          <div>{selectedClass?.name}</div>
+          <div className={styles.classList}>
+            <Divider />
+            {!!selectedClass?.decks?.length && (
+              <List
+                itemLayout="vertical"
+                size="large"
+                dataSource={selectedClass.decks}
+                // footer={
+                //   <div>
+                //     <b>ant design</b> footer part
+                //   </div>
+                // }
+                renderItem={(deck) => (
+                  <List.Item
+                    className={styles.classListItem}
+                    key={deck.id}
+                    // actions={[
+                    //   <PlayCircleOutlined />,
+                    //   <EditOutlined />,
+                    //   <IconText
+                    //     icon={PlayCircleOutlined}
+                    //     text="Play!"
+                    //     key="list-vertical-like-o"
+                    //   />,
+                    //   <IconText
+                    //     icon={EditOutlined}
+                    //     text="Edit Card"
+                    //     key="list-vertical-message"
+                    //   />,
+                    // ]}
+                    extra={
+                      // <img
+                      //   width={272}
+                      //   alt="logo"
+                      //   src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
+                      // />
+                      <Space direction="horizontal" size="large" align="center">
+                        <PlayCircleOutlined
+                          style={{ fontSize: "30px", color: "#08c" }}
+                        />
+                        <EditOutlined
+                          style={{
+                            fontSize: "30px",
+                            color: "rgba(124, 130, 142, 0.6)",
+                          }}
+                        />
+                      </Space>
+                    }
+                  >
+                    <List.Item.Meta
+                      title={
+                        <a href="#" className={styles.classDeckListTitle}>
+                          {deck.name}
+                        </a>
+                      }
+                    />
+                  </List.Item>
+                )}
+              />
+            )}
+            <Divider />
+          </div>
         </Content>
       </Layout>
       <Footer style={{ textAlign: "center" }}>
