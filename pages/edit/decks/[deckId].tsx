@@ -1,25 +1,17 @@
 import React, { useEffect, useState } from "react";
 import type { NextPage } from "next";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Card, Deck } from "@prisma/client";
 import styles from "../../../styles/EditDecks.module.css";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { getDeck } from "../../../src/api/decks";
 import { CARD_QUERY } from "../../../src/constants";
 
-import {
-  Layout,
-  Menu,
-  Breadcrumb,
-  Card,
-  Button,
-  Input,
-  Row,
-  Form,
-  Divider,
-} from "antd";
+import { Layout, Breadcrumb, Button, Row, Form } from "antd";
 
-import { DeleteOutlined, PlusOutlined, SaveOutlined } from "@ant-design/icons";
+import { DeleteOutlined } from "@ant-design/icons";
 import { CreateOrUpdateCard, createOrUpdateCard } from "../../../src/api/cards";
+import SiderCardsPage from "../../../src/editDeck/siderCards";
+import FormCardsEdit from "../../../src/editDeck/formCards";
 
 const { Header, Content, Footer, Sider } = Layout;
 const prisma = new PrismaClient();
@@ -34,6 +26,7 @@ export async function getServerSideProps(context) {
       cards: true,
       name: true,
       classOfDeck: true,
+      id: true,
     },
   });
   return {
@@ -43,7 +36,7 @@ export async function getServerSideProps(context) {
   };
 }
 
-const Home: NextPage = ({ deck }: any) => {
+const Home: NextPage<{ deck: Deck }> = ({ deck }) => {
   const queryClient = useQueryClient();
   const { data: deckForCards } = useQuery(
     [CARD_QUERY],
@@ -81,7 +74,7 @@ const Home: NextPage = ({ deck }: any) => {
     }
   );
 
-  const [selectedCard, setSelectedCard] = useState(
+  const [selectedCard, setSelectedCard] = useState<Card>(
     deck?.cards?.length ? deck?.cards[0] : null
   );
 
@@ -98,49 +91,21 @@ const Home: NextPage = ({ deck }: any) => {
     );
     setSelectedCard(cardSelected);
   };
+
+  const handleNewCard = (newCard: Card) => {
+    setSelectedCard(newCard);
+  };
   return (
     <Layout>
       <Header />
       <Layout>
-        <Sider>
-          <Menu
-            theme="dark"
-            defaultSelectedKeys={[selectedCard?.id]}
-            mode="inline"
-            onClick={cardSelected}
-          >
-            {deckForCards.cards &&
-              deckForCards.cards.map((card, index) => {
-                return (
-                  <Menu.Item
-                    key={card.id}
-                    style={{ padding: 5, minHeight: "150px" }}
-                  >
-                    <Card
-                      title={card.question}
-                      bordered={false}
-                      className={styles.cards}
-                    />
-                    {/* <Button
-                  type="ghost"
-                  shape="circle"
-                  className={styles.deleteCardButton}
-                  icon={<DeleteOutlined />}
-                /> */}
-                  </Menu.Item>
-                );
-              })}
-          </Menu>
-          <div className={styles.sideButtonContainer}>
-            <Button
-              type="text"
-              className={styles.createNewCardButton}
-              icon={<PlusOutlined />}
-            >
-              Create New Card
-            </Button>
-          </div>
-        </Sider>
+        <SiderCardsPage
+          selectedCard={selectedCard}
+          cardSelected={cardSelected}
+          deckForCards={deckForCards}
+          handleCreateOrUpdateCard={handleCreateOrUpdateCard}
+          handleNewCard={handleNewCard}
+        />
         <Content>
           <Row align="middle" justify="space-between">
             <Breadcrumb className={styles.breadcrumb}>
@@ -156,40 +121,11 @@ const Home: NextPage = ({ deck }: any) => {
               Delete Card
             </Button>
           </Row>
-          <div>
-            <Form
-              className={styles.card}
-              form={form}
-              onFinish={handleFormSubmit}
-              initialValues={{
-                question: selectedCard?.question,
-                answer: selectedCard?.answer,
-              }}
-            >
-              <Form.Item name="question">
-                <Input.TextArea
-                  maxLength={1000}
-                  className={styles.questionText}
-                  rows={10}
-                />
-              </Form.Item>
-              <Divider />
-              <Form.Item name="answer">
-                <Input.TextArea
-                  maxLength={1000}
-                  className={styles.answerText}
-                  rows={20}
-                />
-              </Form.Item>
-              <Button
-                className={styles.saveEditButton}
-                icon={<SaveOutlined />}
-                onClick={() => form.submit()}
-              >
-                Save Card
-              </Button>
-            </Form>
-          </div>
+          <FormCardsEdit
+            handleFormSubmit={handleFormSubmit}
+            selectedCard={selectedCard}
+            form={form}
+          />
         </Content>
       </Layout>
       <Footer style={{ textAlign: "center" }}>

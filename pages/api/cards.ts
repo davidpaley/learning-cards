@@ -8,7 +8,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Card>) => {
     const newCard = JSON.parse(req.body);
     const saveCard = await prisma.card.upsert({
       where: {
-        id: newCard.selectedCard.id,
+        id: newCard.selectedCard?.id || "-1",
       },
       update: {
         answer: newCard.answer,
