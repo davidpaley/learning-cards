@@ -12,6 +12,7 @@ import { DeleteOutlined } from "@ant-design/icons";
 import { CreateOrUpdateCard, createOrUpdateCard } from "../../../src/api/cards";
 import SiderCardsPage from "../../../src/editDeck/siderCards";
 import FormCardsEdit from "../../../src/editDeck/formCards";
+import DeleteCard from "../../../src/editDeck/deleteCards";
 
 const { Header, Content, Footer, Sider } = Layout;
 const prisma = new PrismaClient();
@@ -92,6 +93,10 @@ const Home: NextPage<{ deck: Deck }> = ({ deck }) => {
     setSelectedCard(cardSelected);
   };
 
+  const setSelectedCardWhenDeleteCard = () => {
+    setSelectedCard(deck?.cards[0]);
+  };
+
   const handleNewCard = (newCard: Card) => {
     setSelectedCard(newCard);
   };
@@ -113,13 +118,10 @@ const Home: NextPage<{ deck: Deck }> = ({ deck }) => {
               <Breadcrumb.Item>{deckForCards.name}</Breadcrumb.Item>
               {/* <Breadcrumb.Item>{selectedCard.id}</Breadcrumb.Item> */}
             </Breadcrumb>
-            <Button
-              danger
-              className={styles.deleteCardButton}
-              icon={<DeleteOutlined />}
-            >
-              Delete Card
-            </Button>
+            <DeleteCard
+              selectedCard={selectedCard}
+              setSelectedCardWhenDeleteCard={setSelectedCardWhenDeleteCard}
+            />
           </Row>
           <FormCardsEdit
             handleFormSubmit={handleFormSubmit}

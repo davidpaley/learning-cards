@@ -33,6 +33,15 @@ export default async (req: NextApiRequest, res: NextApiResponse<Card>) => {
     });
     res.status(200).json(card);
     return;
+  } else if (req.method === "DELETE") {
+    const cardId = JSON.parse(req.body);
+    const deleteCard = await prisma.card.delete({
+      where: {
+        id: cardId as string,
+      },
+    });
+    res.status(200).json(deleteCard);
+    return;
   }
   return res.status(405).json({ message: "Method not allowed" } as any);
 };
