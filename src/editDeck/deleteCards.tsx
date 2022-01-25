@@ -7,7 +7,7 @@ import { CARD_QUERY } from "../../src/constants";
 
 import { deleteCard, DeleteCard } from "../../src/api/cards";
 
-const DeleteCard = ({ selectedCard, setSelectedCardWhenDeleteCard }) => {
+const DeleteCardModal = ({ selectedCard, setSelectedCardWhenDeleteCard }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const queryClient = useQueryClient();
   const {
@@ -64,4 +64,4 @@ const DeleteCard = ({ selectedCard, setSelectedCardWhenDeleteCard }) => {
     </>
   );
 };
-export default DeleteCard;
+export default DeleteCardModal;

@@ -11,7 +11,7 @@ import { Layout, Breadcrumb, Button, Row, Form } from "antd";
 import { CreateOrUpdateCard, createOrUpdateCard } from "../../../src/api/cards";
 import SidebarCards from "../../../src/editDeck/siderCards";
 import FormCardsEdit from "../../../src/editDeck/formCards";
-import DeleteCard from "../../../src/editDeck/deleteCards";
+import DeleteCardModal from "../../../src/editDeck/deleteCards";
 
 const { Header, Content, Footer, Sider } = Layout;
 const prisma = new PrismaClient();
@@ -113,7 +113,7 @@ const Home: NextPage<{ deck: Deck }> = ({ deck }) => {
               <Breadcrumb.Item>{deckForCards.name}</Breadcrumb.Item>
               {/* <Breadcrumb.Item>{selectedCard.id}</Breadcrumb.Item> */}
             </Breadcrumb>
-            <DeleteCard
+            <DeleteCardModal
               selectedCard={selectedCard}
               setSelectedCardWhenDeleteCard={setSelectedCardWhenDeleteCard}
             />
