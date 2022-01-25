@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "../../styles/EditDecks.module.css";
-import { Button } from "antd";
+import { Button, Modal } from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { DeleteOutlined } from "@ant-design/icons";
 import { CARD_QUERY } from "../../src/constants";
@@ -8,6 +8,7 @@ import { CARD_QUERY } from "../../src/constants";
 import { deleteCard, DeleteCard } from "../../src/api/cards";
 
 const DeleteCard = ({ selectedCard, setSelectedCardWhenDeleteCard }) => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const queryClient = useQueryClient();
   const {
     isLoading,
@@ -30,11 +31,16 @@ const DeleteCard = ({ selectedCard, setSelectedCardWhenDeleteCard }) => {
 
       onSuccess: () => {
         setSelectedCardWhenDeleteCard();
-        //ver que hago si es success
       },
     }
   );
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
   const handleDeleteCardSelected = () => {
+    setIsModalVisible(false);
     handleDeleteCard(selectedCard.id);
   };
   return (
@@ -43,10 +49,18 @@ const DeleteCard = ({ selectedCard, setSelectedCardWhenDeleteCard }) => {
         danger
         className={styles.deleteCardButton}
         icon={<DeleteOutlined />}
-        onClick={handleDeleteCardSelected}
+        onClick={showModal}
       >
         Delete Card
       </Button>
+      <Modal
+        title="Delete Card"
+        visible={isModalVisible}
+        onOk={handleDeleteCardSelected}
+        onCancel={() => setIsModalVisible(false)}
+      >
+        <p>Are you want to delete this card?</p>
+      </Modal>
     </>
   );
 };

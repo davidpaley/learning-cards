@@ -23,7 +23,7 @@ const FormCardsEdit = ({
   form,
 }: FormCardEditArgs) => {
   return (
-    <div>
+    <>
       <Form
         className={styles.card}
         form={form}
@@ -56,7 +56,7 @@ const FormCardsEdit = ({
           Save Card
         </Button>
       </Form>
-    </div>
+    </>
   );
 };
 export default FormCardsEdit;

@@ -8,9 +8,8 @@ import { CARD_QUERY } from "../../../src/constants";
 
 import { Layout, Breadcrumb, Button, Row, Form } from "antd";
 
-import { DeleteOutlined } from "@ant-design/icons";
 import { CreateOrUpdateCard, createOrUpdateCard } from "../../../src/api/cards";
-import SiderCardsPage from "../../../src/editDeck/siderCards";
+import SidebarCards from "../../../src/editDeck/siderCards";
 import FormCardsEdit from "../../../src/editDeck/formCards";
 import DeleteCard from "../../../src/editDeck/deleteCards";
 
@@ -50,6 +49,10 @@ const Home: NextPage<{ deck: Deck }> = ({ deck }) => {
     }
   );
 
+  const [selectedCard, setSelectedCard] = useState<Card>(
+    deck?.cards?.length ? deck?.cards[0] : null
+  );
+
   const {
     isLoading,
     error,
@@ -69,14 +72,10 @@ const Home: NextPage<{ deck: Deck }> = ({ deck }) => {
         queryClient.invalidateQueries([CARD_QUERY]);
       },
 
-      onSuccess: () => {
-        //ver que hago si es success
+      onSuccess: (successData) => {
+        setSelectedCard(successData);
       },
     }
-  );
-
-  const [selectedCard, setSelectedCard] = useState<Card>(
-    deck?.cards?.length ? deck?.cards[0] : null
   );
 
   const [form] = Form.useForm();
@@ -97,19 +96,15 @@ const Home: NextPage<{ deck: Deck }> = ({ deck }) => {
     setSelectedCard(deck?.cards[0]);
   };
 
-  const handleNewCard = (newCard: Card) => {
-    setSelectedCard(newCard);
-  };
   return (
     <Layout>
       <Header />
       <Layout>
-        <SiderCardsPage
+        <SidebarCards
           selectedCard={selectedCard}
           cardSelected={cardSelected}
           deckForCards={deckForCards}
           handleCreateOrUpdateCard={handleCreateOrUpdateCard}
-          handleNewCard={handleNewCard}
         />
         <Content>
           <Row align="middle" justify="space-between">

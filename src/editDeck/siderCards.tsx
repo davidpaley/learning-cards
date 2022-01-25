@@ -6,12 +6,11 @@ const { Sider } = Layout;
 
 import { PlusOutlined } from "@ant-design/icons";
 
-const SiderCardsPage = ({
+const SidebarCards = ({
   selectedCard,
   cardSelected,
   deckForCards,
   handleCreateOrUpdateCard,
-  handleNewCard,
 }) => {
   const handleCreateNewCard = () => {
     const newCard = {
@@ -24,13 +23,12 @@ const SiderCardsPage = ({
       },
     };
     handleCreateOrUpdateCard(newCard);
-    handleNewCard(newCard);
   };
   return (
     <Sider>
       <Menu
         theme="dark"
-        defaultSelectedKeys={[selectedCard?.id]}
+        selectedKeys={[selectedCard?.id]}
         mode="inline"
         onClick={cardSelected}
       >
@@ -42,12 +40,6 @@ const SiderCardsPage = ({
                 bordered={false}
                 className={styles.cards}
               />
-              {/* <Button
-                  type="ghost"
-                  shape="circle"
-                  className={styles.deleteCardButton}
-                  icon={<DeleteOutlined />}
-                /> */}
             </Menu.Item>
           );
         })}
@@ -65,4 +57,4 @@ const SiderCardsPage = ({
     </Sider>
   );
 };
-export default SiderCardsPage;
+export default SidebarCards;
