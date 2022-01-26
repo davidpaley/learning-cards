@@ -45,7 +45,7 @@ const Home: NextPage<{ deck: Deck }> = ({ deck }) => {
       return deckResponse;
     },
     {
-      initialData: deck as any,
+      initialData: deck as Deck,
     }
   );
 
