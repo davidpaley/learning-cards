@@ -1,102 +1,128 @@
+import React, { useEffect, useState } from "react";
 import type { NextPage } from "next";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Card, Deck } from "@prisma/client";
 import styles from "../../../styles/EditDecks.module.css";
+import { useQuery, useMutation, useQueryClient } from "react-query";
+import { getDeck } from "../../../src/api/decks";
+import { CARD_QUERY } from "../../../src/constants";
 
-import { Layout, Menu, Breadcrumb, Card, Button, Input, Row } from "antd";
+import { Layout, Breadcrumb, Button, Row, Form } from "antd";
 
-import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import { CreateOrUpdateCard, createOrUpdateCard } from "../../../src/api/cards";
+import SidebarCards from "../../../src/editDeck/siderCards";
+import FormCardsEdit from "../../../src/editDeck/formCards";
+import DeleteCardModal from "../../../src/editDeck/deleteCards";
 
 const { Header, Content, Footer, Sider } = Layout;
-const { TextArea } = Input;
-// const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
-// export async function getServerSideProps() {
-//   const classesForCards = await prisma.
-//   console.log({ classesForCards });
-//   return {
-//     props: {
-//       classesForDecks: JSON.parse(JSON.stringify(classesForCards)),
-//     },
-//   };
-// }
-
-const Home: NextPage = () => {
-  const onChange = (e) => {
-    console.log("Change:", e.target.value);
+export async function getServerSideProps(context) {
+  const { query } = context;
+  const deck = await prisma.deck.findUnique({
+    where: {
+      id: query.deckId,
+    },
+    select: {
+      cards: true,
+      name: true,
+      classOfDeck: true,
+      id: true,
+    },
+  });
+  return {
+    props: {
+      deck: JSON.parse(JSON.stringify(deck)),
+    },
   };
+}
+
+const Home: NextPage<{ deck: Deck }> = ({ deck }) => {
+  const queryClient = useQueryClient();
+  const { data: deckForCards } = useQuery(
+    [CARD_QUERY],
+    async () => {
+      const deckResponse = await getDeck(deck.id);
+      return deckResponse;
+    },
+    {
+      initialData: deck as Deck,
+    }
+  );
+
+  const [selectedCard, setSelectedCard] = useState<Card>(
+    deck?.cards?.length ? deck?.cards[0] : null
+  );
+
+  const {
+    isLoading,
+    error,
+    mutate: handleCreateOrUpdateCard,
+  } = useMutation(
+    async (cardObject: CreateOrUpdateCard) => {
+      const response = await createOrUpdateCard(cardObject);
+      const data = await response.json();
+      return data;
+    },
+    {
+      onError: (err) => {
+        console.log(err);
+      },
+      // Always refetch after error or success:
+      onSettled: () => {
+        queryClient.invalidateQueries([CARD_QUERY]);
+      },
+
+      onSuccess: (successData) => {
+        setSelectedCard(successData);
+      },
+    }
+  );
+
+  const [form] = Form.useForm();
+  useEffect(() => form.resetFields(), [deck, selectedCard]);
+
+  const handleFormSubmit = (value) => {
+    handleCreateOrUpdateCard({ ...value, selectedCard });
+  };
+
+  const cardSelected = (event) => {
+    const cardSelected = deckForCards.cards.find(
+      (card) => card.id === event.key
+    );
+    setSelectedCard(cardSelected);
+  };
+
+  const setSelectedCardWhenDeleteCard = () => {
+    setSelectedCard(deck?.cards[0]);
+  };
+
   return (
     <Layout>
       <Header />
       <Layout>
-        <Sider>
-          <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
-            <Menu.Item key="1" style={{ padding: 5, minHeight: "150px" }}>
-              {/* <Button
-                  type="ghost"
-                  shape="circle"
-                  className={styles.deleteCardButton}
-                  icon={<DeleteOutlined />}
-                /> */}
-              <Card
-                title="Card title 1"
-                bordered={false}
-                className={styles.cards}
-              />
-            </Menu.Item>
-            <Menu.Item key="2" style={{ padding: 5, minHeight: "150px" }}>
-              <Card
-                title="Card title 2"
-                bordered={false}
-                className={styles.cards}
-              />
-            </Menu.Item>
-          </Menu>
-          <div className={styles.sideButtonContainer}>
-            <Button
-              type="text"
-              className={styles.createNewCardButton}
-              icon={<PlusOutlined />}
-            >
-              Create New Card
-            </Button>
-          </div>
-        </Sider>
+        <SidebarCards
+          selectedCard={selectedCard}
+          cardSelected={cardSelected}
+          deckForCards={deckForCards}
+          handleCreateOrUpdateCard={handleCreateOrUpdateCard}
+        />
         <Content>
           <Row align="middle" justify="space-between">
             <Breadcrumb className={styles.breadcrumb}>
-              <Breadcrumb.Item>Name of the Class</Breadcrumb.Item>
-              <Breadcrumb.Item>Name of the Deck</Breadcrumb.Item>
-              <Breadcrumb.Item>Card1</Breadcrumb.Item>
+              <Breadcrumb.Item>{deckForCards.name}</Breadcrumb.Item>
+              <Breadcrumb.Item>{deckForCards.name}</Breadcrumb.Item>
+              {/* <Breadcrumb.Item>{selectedCard.id}</Breadcrumb.Item> */}
             </Breadcrumb>
-            <Button
-              danger
-              className={styles.deleteCardButton}
-              icon={<DeleteOutlined />}
-            >
-              Delete Card
-            </Button>
+            <DeleteCardModal
+              selectedCard={selectedCard}
+              setSelectedCardWhenDeleteCard={setSelectedCardWhenDeleteCard}
+            />
           </Row>
-          <div>
-            <div className={styles.card}>
-              <div className={styles.textarea}>
-                <TextArea
-                  maxLength={1000}
-                  style={{ padding: 10 }}
-                  className={styles.questionText}
-                  onChange={onChange}
-                  rows={10}
-                />
-              </div>
-              <div className={styles.textarea}>
-                <TextArea
-                  maxLength={1000}
-                  className={styles.answerText}
-                  onChange={onChange}
-                  rows={20}
-                />
-              </div>
-            </div>
-          </div>
+          <FormCardsEdit
+            handleFormSubmit={handleFormSubmit}
+            selectedCard={selectedCard}
+            form={form}
+          />
         </Content>
       </Layout>
       <Footer style={{ textAlign: "center" }}>

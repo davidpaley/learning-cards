@@ -43,7 +43,7 @@ model Deck {
 }
 
 model Card {
-  id String @id @default(cuid())
+  id String @id @default(cuid()) @unique
   
   question String
   answer String
