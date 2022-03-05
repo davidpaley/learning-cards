@@ -2,6 +2,11 @@
   padding: 0 2rem;
 }
 
+.classContent {
+  height: 100vh;
+  padding: 25px;
+}
+
 .main {
   min-height: 100vh;
   padding: 4rem 0;
@@ -113,4 +118,24 @@
     width: 100%;
     flex-direction: column;
   }
+}
+
+.classDeckListTitle {
+  font-size: 1.5rem;
+}
+
+.createNewClass {
+  color: white;
+  display: flex;
+  justify-content: space-around;
+  align-items: baseline;
+}
+
+.createClassTitle {
+  color: white !important;
+  margin-left: 1rem;
+}
+
+.createNewClassIcon {
+  color: white !important;
 }
