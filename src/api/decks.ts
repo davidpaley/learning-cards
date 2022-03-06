@@ -1,16 +1,17 @@
 type CreateDeck = {
-  name: String;
-  classId: String;
+  name: string;
+  classId: string;
   isUpdate?: boolean;
 };
 
 const URL = "/api/decks";
 
-export const createOrUpdateDeck = (body: CreateDeck) =>
-  fetch(URL, {
+export const createOrUpdateDeck = (body: CreateDeck) => {
+  return fetch(URL, {
     method: "POST",
     body: JSON.stringify(body),
   });
+};
 
 export const getDecks = async () => {
   const response = await fetch(URL);
