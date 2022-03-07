@@ -12,9 +12,9 @@ import {
 } from "antd";
 import {
   DeleteOutlined,
-  PlusOutlined,
   PlayCircleOutlined,
   EditOutlined,
+  PlusCircleOutlined,
 } from "@ant-design/icons";
 import Head from "next/head";
 import { Typography } from "antd";
@@ -94,16 +94,20 @@ const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
                 </Menu.Item>
               ))}
           </Menu>
+
+          <Divider style={{ border: "0.5px solid white" }} />
           <Button
             type="text"
             className={styles.createNewClass}
-            icon={<PlusOutlined className={styles.createNewClassIcon} />}
+            icon={<PlusCircleOutlined className={styles.createNewClassIcon} />}
+            // <PlusOutlined className={styles.createNewClassIcon} />}
             onClick={() => setIsCreateClassModalVisible(true)}
           >
             <Title className={styles.createClassTitle} level={5}>
-              Your Classes
+              Add Class
             </Title>
           </Button>
+          <Divider style={{ border: "0.5px solid white" }} />
           {/* <div className={styles.sideButtonContainer}>
           </div> */}
         </Sider>
@@ -133,52 +137,52 @@ const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
                 //   </div>
                 // }
                 renderItem={(deck) => (
-                  <List.Item
-                    className={styles.classListItem}
-                    key={deck.id}
-                    // actions={[
-                    //   <PlayCircleOutlined />,
-                    //   <EditOutlined />,
-                    //   <IconText
-                    //     icon={PlayCircleOutlined}
-                    //     text="Play!"
-                    //     key="list-vertical-like-o"
-                    //   />,
-                    //   <IconText
-                    //     icon={EditOutlined}
-                    //     text="Edit Card"
-                    //     key="list-vertical-message"
-                    //   />,
-                    // ]}
-                    extra={
-                      <Space direction="horizontal" size="large" align="center">
-                        <PlayCircleOutlined
-                          style={{ fontSize: "30px", color: "#08c" }}
-                        />
-                        <EditOutlined
-                          style={{
-                            fontSize: "30px",
-                            color: "rgba(124, 130, 142, 0.6)",
-                          }}
-                        />
-                      </Space>
-                    }
-                  >
-                    <List.Item.Meta
-                      title={
-                        <Typography.Link
-                          href="#"
-                          style={{ fontSize: "1.5rem" }}
+                  <>
+                    <List.Item
+                      className={styles.classListItem}
+                      key={deck.id}
+                      // actions={[
+                      //   <Progress
+                      //     percent={30}
+                      //     size="small"
+                      //     status="active"
+                      //     type="circle"
+                      //   />,
+                      // ]}
+                      extra={
+                        <Space
+                          direction="horizontal"
+                          size="large"
+                          align="center"
                         >
-                          {deck.name}
-                        </Typography.Link>
+                          <PlayCircleOutlined
+                            style={{ fontSize: "30px", color: "#08c" }}
+                          />
+                          <EditOutlined
+                            style={{
+                              fontSize: "30px",
+                              color: "rgba(124, 130, 142, 0.6)",
+                            }}
+                          />
+                        </Space>
                       }
-                    />
-                  </List.Item>
+                    >
+                      <List.Item.Meta
+                        title={
+                          <Typography.Link
+                            href="#"
+                            style={{ fontSize: "1.5rem" }}
+                          >
+                            {deck.name}
+                          </Typography.Link>
+                        }
+                      />
+                    </List.Item>
+                    <Divider />
+                  </>
                 )}
               />
             )}
-            <Divider />
 
             <AddNewDeckButton classId={selectedClass.id} />
           </div>
