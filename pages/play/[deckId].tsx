@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import type { NextPage } from "next";
 import { PrismaClient, Card as CardType } from "@prisma/client";
-import styles from "../../styles/playCards.module.css";
+import styles from "../../styles/PlayCards.module.css";
 // TODO: delete this functions if they are not necessary
 // import { getDate, viewCardsForDates } from "../../utils/dates";
 
 import { Layout, Button, Row, Card, Typography, Col } from "antd";
-const { Title } = Typography;
+const { Title, Text } = Typography;
 const { Header } = Layout;
 const prisma = new PrismaClient();
 
@@ -89,72 +89,39 @@ const PlayPage: NextPage<{ cardsToPlay: CardType[] }> = ({ cardsToPlay }) => {
                   </Title>
                 </Button>
               ) : (
-                <div className={styles.allButtonLevel}>
-                  <Col span={4}>
-                    <Button
-                      type="primary"
-                      className={styles.buttonLevel1}
-                      onClick={() => {
-                        nextCardAndSetLevel("1");
-                      }}
-                    >
-                      <Title className={styles.answerTitle} level={5}>
-                        1
-                      </Title>
-                    </Button>
-                  </Col>
-                  <Col span={4}>
-                    <Button
-                      type="primary"
-                      className={styles.buttonLevel2}
-                      onClick={() => {
-                        nextCardAndSetLevel("2");
-                      }}
-                    >
-                      <Title className={styles.answerTitle} level={5}>
-                        2
-                      </Title>
-                    </Button>
-                  </Col>
-                  <Col span={4}>
-                    <Button
-                      type="primary"
-                      className={styles.buttonLevel3}
-                      onClick={() => {
-                        nextCardAndSetLevel("3");
-                      }}
-                    >
-                      <Title className={styles.answerTitle} level={5}>
-                        3
-                      </Title>
-                    </Button>
-                  </Col>
-                  <Col span={4}>
-                    <Button
-                      type="primary"
-                      className={styles.buttonLevel4}
-                      onClick={() => {
-                        nextCardAndSetLevel("4");
-                      }}
-                    >
-                      <Title className={styles.answerTitle} level={5}>
-                        4
-                      </Title>
-                    </Button>
-                  </Col>
-                  <Col span={4}>
-                    <Button
-                      type="primary"
-                      className={styles.buttonLevel5}
-                      onClick={() => {
-                        nextCardAndSetLevel("5");
-                      }}
-                    >
-                      <Title className={styles.answerTitle} level={5}>
-                        5
-                      </Title>
-                    </Button>
-                  </Col>
+                <div className={styles.replyContainer}>
+                  <Text className={styles.answerQuestion} type="secondary">
+                    How was your answer?
+                  </Text>
+
+                  <div className={styles.allButtonLevel}>
+                    <Col span={12}>
+                      <Button
+                        type="primary"
+                        className={styles.buttonLevel1}
+                        onClick={() => {
+                          nextCardAndSetLevel("1");
+                        }}
+                      >
+                        <Title className={styles.answerTitle} level={5}>
+                          Bad 👎
+                        </Title>
+                      </Button>
+                    </Col>
+                    <Col span={12}>
+                      <Button
+                        type="primary"
+                        className={styles.buttonLevel2}
+                        onClick={() => {
+                          nextCardAndSetLevel("2");
+                        }}
+                      >
+                        <Title className={styles.answerTitle} level={5}>
+                          Good 👍
+                        </Title>
+                      </Button>
+                    </Col>
+                  </div>
                 </div>
               )}
             </Row>
@@ -162,16 +129,21 @@ const PlayPage: NextPage<{ cardsToPlay: CardType[] }> = ({ cardsToPlay }) => {
         ) : (
           <Row align="middle" justify="center">
             <Card
-              title={"No cards for today"}
+              // title={"No cards for today"}
               //extra={<a href="#">More</a>}
               // TODO: Review styles of this card
-              // style={{ width: 900, height: 600 }}
+              style={{ width: 900, height: 600, backgroundColor: "white" }}
+              cover={
+                <img
+                  alt="example"
+                  src="https://t4.ftcdn.net/jpg/03/12/44/31/360_F_312443165_8EfqDsrod8dsIV5sTw73RZohUuKob2Ia.jpg"
+                />
+              }
             >
-              <p className={styles.questionOrAnswer}>
-                {
-                  "You don't have any cards to resolve today! Go enjoy the day =)"
-                }
-              </p>
+              <Card.Meta
+                title="All your cards for today are done!"
+                description="You don't have any more cards to resolve today! Go enjoy the day =)"
+              />
             </Card>
           </Row>
         )}

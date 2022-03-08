@@ -1,6 +1,7 @@
 .siteCardBorderLessWrapper {
   padding: 100px;
   background: #ececec;
+  height: 100vh;
 }
 .revealAnswerButton {
   width: 900px;
@@ -22,35 +23,30 @@
 .buttonLevel1 {
   width: 200px;
   height: 100px;
-  margin-top: 40px;
   background-color: #722ed1;
   border-color: #722ed1 !important;
 }
 .buttonLevel2 {
   width: 200px;
   height: 100px;
-  margin-top: 40px;
   background-color: #faad14;
   border-color: #faad14 !important;
 }
 .buttonLevel3 {
   width: 200px;
   height: 100px;
-  margin-top: 40px;
   background-color: #fadb14;
   border-color: #fadb14 !important;
 }
 .buttonLevel4 {
   width: 200px;
   height: 100px;
-  margin-top: 40px;
   background-color: #13c2c2;
   border-color: #13c2c2 !important;
 }
 .buttonLevel5 {
   width: 200px;
   height: 100px;
-  margin-top: 40px;
   background-color: #a0d911;
   border-color: #a0d911 !important;
 }
@@ -59,4 +55,11 @@
   margin: 20 !important;
   font-size: 1.5rem !important;
   line-height: 1.5 !important;
+}
+
+.replyContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
