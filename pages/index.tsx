@@ -17,7 +17,6 @@ const { Content, Footer, Header } = Layout;
 
 export async function getServerSideProps() {
   const classesForDecks = await prisma.classForDecks.findMany();
-  console.log({ classesForDecks });
   return {
     props: {
       classesForDecks: JSON.parse(JSON.stringify(classesForDecks)),
@@ -25,7 +24,6 @@ export async function getServerSideProps() {
   };
 }
 const Home: NextPage = ({ classesForDecks }: any) => {
-  console.log({ classesForDecks });
   const saveDeck = async () => {
     const body = {
       name: `Created Deck ${Math.random()}`,
@@ -37,7 +35,6 @@ const Home: NextPage = ({ classesForDecks }: any) => {
     });
     if (!response.ok) throw new Error(response.statusText);
     const responseJson = await response.json();
-    console.log({ responseJson });
   };
 
   const addNewClass = () => {

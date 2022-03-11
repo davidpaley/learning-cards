@@ -47,7 +47,7 @@ model Card {
   
   question String
   answer String
-  
+  status Boolean @default(false)
   videoQuestion String?
   videoAnswer String?
   imageQuestion String?
@@ -60,5 +60,6 @@ model Card {
   
   nextReviewDate DateTime
   level Int
+  
 }
 

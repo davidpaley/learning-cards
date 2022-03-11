@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import type { NextPage } from "next";
 import { PrismaClient, Card as CardType } from "@prisma/client";
+import { useMutation, useQueryClient } from "react-query";
 import styles from "../../styles/PlayCards.module.css";
-// TODO: delete this functions if they are not necessary
-// import { getDate, viewCardsForDates } from "../../utils/dates";
+import { levelsValues, CARD_QUERY } from "../../src/constants";
+import { CreateOrUpdateCard, createOrUpdateCard } from "../../src/api/cards";
 
 import { Layout, Button, Row, Card, Typography, Col } from "antd";
 const { Title, Text } = Typography;
@@ -26,8 +27,7 @@ export async function getServerSideProps(context) {
   const currentDate = new Date().setHours(0, 0, 0, 0);
   const cardsToShow = deck.cards.filter((card) => {
     const cardDate = new Date(card.nextReviewDate).setHours(0, 0, 0, 0);
-    console.log({ cardDate });
-    return currentDate >= cardDate;
+    return currentDate >= cardDate && !card.status;
   });
   return {
     props: {
@@ -37,18 +37,74 @@ export async function getServerSideProps(context) {
 }
 
 const PlayPage: NextPage<{ cardsToPlay: CardType[] }> = ({ cardsToPlay }) => {
+  const queryClient = useQueryClient();
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [revealAnswerButton, setRevealAnswerButton] = useState(true);
   const [emptyCardsForToday, setEmptyCardsForToday] = useState(
     !cardsToPlay.length
   );
-  const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const goToNextCard = () => {
     setCurrentCardIndex((prevState) => prevState + 1);
     setRevealAnswerButton(true);
   };
-  const nextCardAndSetLevel = (level) => {
-    // TODO: modify current card according to answer
 
+  const {
+    isLoading,
+    error,
+    mutate: handleCreateOrUpdateCard,
+  } = useMutation(
+    async (cardObject: CreateOrUpdateCard) => {
+      const response = await createOrUpdateCard(cardObject);
+      const data = await response.json();
+      return data;
+    },
+    {
+      onError: (err) => {
+        console.log(err);
+      },
+      // Always refetch after error or success:
+      onSettled: () => {
+        queryClient.invalidateQueries([CARD_QUERY]);
+      },
+
+      onSuccess: (successData) => {
+        //goToNextCard(); ??
+        //ver que pasa si guarda bien los datos
+      },
+    }
+  );
+
+  const handleUpdateCard = (value) => {
+    const selectedCard = cardsToPlay[currentCardIndex];
+    handleCreateOrUpdateCard({ selectedCard, ...value });
+  };
+
+  const handleNextCardAndSetLevel = (responseWasGood) => {
+    let daysForLevel = 0;
+    let newLevel = cardsToPlay[currentCardIndex].level;
+    if (responseWasGood) {
+      //level mas uno y si ese nuevo valor es menor a 6 ver que pasa en cada nivel (STATUS EN TRUE SOLO CUANDO TERMINO TODO)
+      //que pasa si llega al final con esa carta?
+      newLevel = cardsToPlay[currentCardIndex].level + 1;
+      daysForLevel = levelsValues[newLevel];
+      if (newLevel >= 7) {
+        handleUpdateCard({
+          level: newLevel,
+          status: true,
+        });
+        goToNextCard();
+        return;
+      }
+    } else {
+      daysForLevel = levelsValues[1];
+      newLevel = 1;
+    }
+    const newNextReviewDate = new Date();
+    newNextReviewDate.setDate(newNextReviewDate.getDate() + daysForLevel);
+    handleUpdateCard({
+      level: newLevel,
+      nextReviewDate: newNextReviewDate,
+    });
     const isLastCard = cardsToPlay.length === currentCardIndex + 1;
     if (isLastCard) {
       setEmptyCardsForToday(true);
@@ -100,7 +156,7 @@ const PlayPage: NextPage<{ cardsToPlay: CardType[] }> = ({ cardsToPlay }) => {
                         type="primary"
                         className={styles.buttonLevel1}
                         onClick={() => {
-                          nextCardAndSetLevel("1");
+                          handleNextCardAndSetLevel(false);
                         }}
                       >
                         <Title className={styles.answerTitle} level={5}>
@@ -113,7 +169,7 @@ const PlayPage: NextPage<{ cardsToPlay: CardType[] }> = ({ cardsToPlay }) => {
                         type="primary"
                         className={styles.buttonLevel2}
                         onClick={() => {
-                          nextCardAndSetLevel("2");
+                          handleNextCardAndSetLevel(true);
                         }}
                       >
                         <Title className={styles.answerTitle} level={5}>
