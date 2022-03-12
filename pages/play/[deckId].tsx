@@ -27,7 +27,7 @@ export async function getServerSideProps(context) {
   const currentDate = new Date().setHours(0, 0, 0, 0);
   const cardsToShow = deck.cards.filter((card) => {
     const cardDate = new Date(card.nextReviewDate).setHours(0, 0, 0, 0);
-    return currentDate >= cardDate && !card.status;
+    return currentDate >= cardDate && !card.isDone;
   });
   return {
     props: {
@@ -48,11 +48,7 @@ const PlayPage: NextPage<{ cardsToPlay: CardType[] }> = ({ cardsToPlay }) => {
     setRevealAnswerButton(true);
   };
 
-  const {
-    isLoading,
-    error,
-    mutate: handleCreateOrUpdateCard,
-  } = useMutation(
+  const { mutate: handleCreateOrUpdateCard } = useMutation(
     async (cardObject: CreateOrUpdateCard) => {
       const response = await createOrUpdateCard(cardObject);
       const data = await response.json();
@@ -66,31 +62,28 @@ const PlayPage: NextPage<{ cardsToPlay: CardType[] }> = ({ cardsToPlay }) => {
       onSettled: () => {
         queryClient.invalidateQueries([CARD_QUERY]);
       },
-
-      onSuccess: (successData) => {
-        //goToNextCard(); ??
-        //ver que pasa si guarda bien los datos
-      },
     }
   );
 
-  const handleUpdateCard = (value) => {
+  const handleUpdateCard = (value: {
+    level: number;
+    isDone?: boolean;
+    nextReviewDate?: Date;
+  }) => {
     const selectedCard = cardsToPlay[currentCardIndex];
-    handleCreateOrUpdateCard({ selectedCard, ...value });
+    handleCreateOrUpdateCard({ ...selectedCard, ...value });
   };
 
-  const handleNextCardAndSetLevel = (responseWasGood) => {
+  const handleNextCardAndSetLevel = (theAnswerWasGood: boolean) => {
     let daysForLevel = 0;
     let newLevel = cardsToPlay[currentCardIndex].level;
-    if (responseWasGood) {
-      //level mas uno y si ese nuevo valor es menor a 6 ver que pasa en cada nivel (STATUS EN TRUE SOLO CUANDO TERMINO TODO)
-      //que pasa si llega al final con esa carta?
+    if (theAnswerWasGood) {
       newLevel = cardsToPlay[currentCardIndex].level + 1;
       daysForLevel = levelsValues[newLevel];
-      if (newLevel >= 7) {
+      if (newLevel >= Object.keys(levelsValues).length) {
         handleUpdateCard({
           level: newLevel,
-          status: true,
+          isDone: true,
         });
         goToNextCard();
         return;
@@ -121,7 +114,6 @@ const PlayPage: NextPage<{ cardsToPlay: CardType[] }> = ({ cardsToPlay }) => {
             <Row align="middle" justify="center">
               <Card
                 title={revealAnswerButton ? "Answer" : "Question"}
-                //extra={<a href="#">More</a>}
                 style={{ width: 900, height: 600 }}
               >
                 <p className={styles.questionOrAnswer}>

@@ -6,14 +6,14 @@ import { useQuery, useMutation, useQueryClient } from "react-query";
 import { getDeck } from "../../../src/api/decks";
 import { CARD_QUERY } from "../../../src/constants";
 
-import { Layout, Breadcrumb, Button, Row, Form } from "antd";
+import { Layout, Breadcrumb, Row, Form } from "antd";
 
 import { CreateOrUpdateCard, createOrUpdateCard } from "../../../src/api/cards";
 import SidebarCards from "../../../src/editDeck/siderCards";
 import FormCardsEdit from "../../../src/editDeck/formCards";
 import DeleteCardModal from "../../../src/editDeck/deleteCards";
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Footer } = Layout;
 const prisma = new PrismaClient();
 
 export async function getServerSideProps(context) {
@@ -53,11 +53,7 @@ const Home: NextPage<{ deck: Deck }> = ({ deck }) => {
     deck?.cards?.length ? deck?.cards[0] : null
   );
 
-  const {
-    isLoading,
-    error,
-    mutate: handleCreateOrUpdateCard,
-  } = useMutation(
+  const { mutate: handleCreateOrUpdateCard } = useMutation(
     async (cardObject: CreateOrUpdateCard) => {
       const response = await createOrUpdateCard(cardObject);
       const data = await response.json();
@@ -81,8 +77,8 @@ const Home: NextPage<{ deck: Deck }> = ({ deck }) => {
   const [form] = Form.useForm();
   useEffect(() => form.resetFields(), [deck, selectedCard]);
 
-  const handleFormSubmit = (value) => {
-    handleCreateOrUpdateCard({ ...value, selectedCard });
+  const handleFormSubmit = (value: { question: string; answer: string }) => {
+    handleCreateOrUpdateCard({ ...selectedCard, ...value });
   };
 
   const cardSelected = (event) => {

@@ -3,38 +3,31 @@ import { PrismaClient } from "@prisma/client";
 import { Card } from "@prisma/client";
 const prisma = new PrismaClient();
 
-type NewCard = {
-  selectedCard?: Card;
-  answer?: string;
-  question?: string;
-  level?: number;
-  nextReviewDate?: Date;
-  status?: boolean;
-};
+type NewCard = Partial<Card>;
 
 export default async (req: NextApiRequest, res: NextApiResponse<Card>) => {
   if (req.method === "POST") {
     const newCard: NewCard = JSON.parse(req.body);
-    const { selectedCard, answer, question, level, nextReviewDate, status } =
+    const { answer, question, level, nextReviewDate, isDone, id, deckId } =
       newCard;
     const saveCard = await prisma.card.upsert({
       where: {
-        id: selectedCard?.id || "-1",
+        id: id || "-1",
       },
       update: {
         answer: !!answer ? answer : undefined,
         question: !!question ? question : undefined,
         level: !!level ? level : undefined,
-        status: !!status ? status : false,
+        isDone: !!isDone ? isDone : false,
         nextReviewDate: !!nextReviewDate ? nextReviewDate : undefined,
       },
       create: {
-        question: !!question ? question : selectedCard.question,
-        answer: !!answer ? answer : selectedCard.answer,
-        nextReviewDate: selectedCard.nextReviewDate,
-        deckId: selectedCard.deckId,
-        level: selectedCard.level,
-        status: false,
+        question,
+        answer,
+        nextReviewDate: nextReviewDate || new Date(),
+        deckId,
+        level: level || 1,
+        isDone: false,
       },
     });
     res.status(200).json(saveCard);
