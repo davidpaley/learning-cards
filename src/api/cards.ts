@@ -5,6 +5,7 @@ export type CreateOrUpdateCard = {
   deckId?: string;
   level?: number;
   id?: string;
+  isDone?: boolean;
 };
 
 export type DeleteCard = {

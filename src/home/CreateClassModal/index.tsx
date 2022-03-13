@@ -27,7 +27,6 @@ const CreateClassModal: FC<CreateClassModalProps> = (modalProps) => {
         userEmail,
       });
       const data = await response.json();
-      console.log({ data });
       return data;
     },
     {
