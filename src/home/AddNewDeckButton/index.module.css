@@ -1,0 +1,10 @@
+.createNewDeckButton {
+  width: 100%;
+  font-size: 1.5rem;
+  height: 100px;
+  text-align: left;
+  padding-left: 1rem;
+}
+.icon {
+  font-size: 1.5rem;
+}
