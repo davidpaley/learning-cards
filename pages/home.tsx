@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import type { NextPage } from "next";
+import Link from "next/link";
 import {
   Layout,
   Menu,
@@ -100,7 +101,6 @@ const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
             type="text"
             className={styles.createNewClass}
             icon={<PlusCircleOutlined className={styles.createNewClassIcon} />}
-            // <PlusOutlined className={styles.createNewClassIcon} />}
             onClick={() => setIsCreateClassModalVisible(true)}
           >
             <Title className={styles.createClassTitle} level={5}>
@@ -108,9 +108,8 @@ const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
             </Title>
           </Button>
           <Divider style={{ border: "0.5px solid white" }} />
-          {/* <div className={styles.sideButtonContainer}>
-          </div> */}
         </Sider>
+
         <Content className={styles.classContent}>
           <Row align="middle" justify="space-between">
             <Breadcrumb className={styles.breadcrumb}>
@@ -131,11 +130,6 @@ const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
                 itemLayout="vertical"
                 size="large"
                 dataSource={selectedClass.decks}
-                // footer={
-                //   <div>
-                //     <b>ant design</b> footer part
-                //   </div>
-                // }
                 renderItem={(deck) => (
                   <>
                     <List.Item
@@ -155,22 +149,31 @@ const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
                           size="large"
                           align="center"
                         >
-                          <PlayCircleOutlined
-                            style={{ fontSize: "30px", color: "#08c" }}
-                          />
-                          <EditOutlined
-                            style={{
-                              fontSize: "30px",
-                              color: "rgba(124, 130, 142, 0.6)",
-                            }}
-                          />
+                          <Link href={`/play/${deck.id}`}>
+                            <PlayCircleOutlined
+                              style={{
+                                fontSize: "30px",
+                                color: "#08c",
+                                cursor: "pointer",
+                              }}
+                            />
+                          </Link>
+                          <Link href={`/edit/decks/${deck.id}`}>
+                            <EditOutlined
+                              style={{
+                                fontSize: "30px",
+                                color: "rgba(124, 130, 142, 0.6)",
+                                cursor: "pointer",
+                              }}
+                            />
+                          </Link>
                         </Space>
                       }
                     >
                       <List.Item.Meta
                         title={
                           <Typography.Link
-                            href="#"
+                            href={`/play/${deck.id}`}
                             style={{ fontSize: "1.5rem" }}
                           >
                             {deck.name}
