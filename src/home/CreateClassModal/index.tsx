@@ -16,11 +16,7 @@ interface CreateClassData {
 const CreateClassModal: FC<CreateClassModalProps> = (modalProps) => {
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
-  const {
-    isLoading,
-    error,
-    mutate: createClass,
-  } = useMutation(
+  const { isLoading, mutate: createClass } = useMutation(
     async ({ name, userEmail }: CreateClassData) => {
       const response = await api.createClass({
         name,
