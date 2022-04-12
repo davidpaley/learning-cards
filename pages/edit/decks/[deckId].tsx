@@ -78,7 +78,8 @@ const Home: NextPage<{ deck: Deck }> = ({ deck }) => {
   useEffect(() => form.resetFields(), [deck, selectedCard]);
 
   const handleFormSubmit = (value: { question: string; answer: string }) => {
-    handleCreateOrUpdateCard({ ...selectedCard, ...value });
+    const card = selectedCard ? selectedCard : { deckId: deck.id };
+    handleCreateOrUpdateCard({ ...card, ...value });
   };
 
   const cardSelected = (event) => {

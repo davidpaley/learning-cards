@@ -13,9 +13,10 @@ import {
 } from "antd";
 import {
   DeleteOutlined,
-  PlayCircleOutlined,
   EditOutlined,
+  PlayCircleOutlined,
   PlusCircleOutlined,
+  PlusOutlined,
 } from "@ant-design/icons";
 import Head from "next/head";
 import { Typography } from "antd";
@@ -64,8 +65,8 @@ const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
   );
 
   useEffect(() => {
-    const currentClass = classes.find((c) => c.name === selectedClass.name);
-    setSelectedClass(currentClass);
+    const currentClass = classes.find((c) => c.name === selectedClass?.name);
+    if (currentClass) setSelectedClass(currentClass);
   }, [classes, setSelectedClass]);
 
   const changeSelectedClass = (newClassSelected: ClassProp) =>
@@ -85,7 +86,7 @@ const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
       <Layout>
         <Sider>
           <Menu theme="dark" defaultSelectedKeys={["0"]} mode="inline">
-            {classes?.length &&
+            {!!classes?.length &&
               classes.map((item, index) => (
                 <Menu.Item
                   key={index}
@@ -186,8 +187,19 @@ const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
                 )}
               />
             )}
-
-            <AddNewDeckButton classId={selectedClass.id} />
+            <AddNewDeckButton classId={selectedClass?.id} />
+            {!classes?.length && (
+              <Button
+                type="primary"
+                icon={<PlusOutlined className={styles.createNewClassIcon} />}
+                onClick={() => setIsCreateClassModalVisible(true)}
+                style={{ width: "100%", height: "90px", fontSize: "1.5rem" }}
+              >
+                Create your first Class!
+                {/* <Title className={styles.createClassTitle} level={3}>
+                </Title> */}
+              </Button>
+            )}
           </div>
         </Content>
       </Layout>

@@ -3,7 +3,7 @@ type CreateClass = {
   userEmail: String;
 };
 
-const URL = "http://localhost:3000/api/classes";
+const URL = `${process.env.NEXT_PUBLIC_HOST}/api/classes`;
 
 export const createClass = (body: CreateClass) => {
   return fetch(URL, {

@@ -17,7 +17,7 @@ const SidebarCards = ({
       question: "  ",
       answer: "  ",
       nextReviewDate: new Date(),
-      deckId: selectedCard.deckId,
+      deckId: deckForCards?.id,
       level: 0,
     };
     handleCreateOrUpdateCard(newCard);
