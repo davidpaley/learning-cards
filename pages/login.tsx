@@ -21,13 +21,13 @@ export async function getServerSideProps(context) {
   });
   return {
     props: {
-      user: JSON.parse(JSON.stringify(user.classes[0])),
+      user: user ? JSON.parse(JSON.stringify(user?.classes[0])) : null,
     },
   };
 }
 
 const LoginPage: NextPage<{ user }> = ({ user }) => {
-  console.log({ usuario: user.userEmail });
+  console.log({ usuario: user?.userEmail });
   const { data: session } = useSession();
   console.log({ session });
   if (session) {
