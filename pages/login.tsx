@@ -28,7 +28,7 @@ export async function getServerSideProps(context) {
 
 const LoginPage: NextPage<{ user }> = ({ user }) => {
   console.log({ usuario: user?.userEmail });
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   console.log({ session });
   if (session) {
     return (
