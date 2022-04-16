@@ -6,6 +6,10 @@ const prisma = new PrismaClient();
 type NewCard = Partial<Card>;
 
 export default async (req: NextApiRequest, res: NextApiResponse<Card>) => {
+  // TODO: Check user logged
+  // if (!req.session.user) {
+  // in a real world application you might read the user id from the session and then do a database request
+  // to get more information on the user if needed
   if (req.method === "POST") {
     const newCard: NewCard = JSON.parse(req.body);
     const { answer, question, level, nextReviewDate, isDone, id, deckId } =

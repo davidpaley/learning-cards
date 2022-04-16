@@ -7,8 +7,8 @@ export default NextAuth({
   // https://next-auth.js.org/configuration/providers/oauth
   providers: [
     GithubProvider({
-      clientId: "48a87f039af48a9b131a",
-      clientSecret: "a26454cf86b64374dfb32c96f180b4c26ee863c7",
+      clientId: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
     }),
   ],
   theme: {

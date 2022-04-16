@@ -5,18 +5,27 @@ import styles from "../../../styles/EditDecks.module.css";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { getDeck } from "../../../src/api/decks";
 import { CARD_QUERY } from "../../../src/constants";
-
+import Header from "../../../src/commonComponents/header";
 import { Layout, Breadcrumb, Row, Form } from "antd";
 
 import { CreateOrUpdateCard, createOrUpdateCard } from "../../../src/api/cards";
 import SidebarCards from "../../../src/editDeck/siderCards";
 import FormCardsEdit from "../../../src/editDeck/formCards";
 import DeleteCardModal from "../../../src/editDeck/deleteCards";
+import { getSession } from "next-auth/react";
 
-const { Header, Content, Footer } = Layout;
+const { Content, Footer } = Layout;
 const prisma = new PrismaClient();
 
 export async function getServerSideProps(context) {
+  const session = await getSession(context);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/login",
+      },
+    };
+  }
   const { query } = context;
   const deck = await prisma.deck.findUnique({
     where: {

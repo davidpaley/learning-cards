@@ -1,11 +1,5 @@
 import type { AppProps } from "next/app";
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  QueryClient,
-  QueryClientProvider,
-} from "react-query";
+import { QueryClient, QueryClientProvider } from "react-query";
 import "../styles/globals.css";
 import { SessionProvider } from "next-auth/react";
 

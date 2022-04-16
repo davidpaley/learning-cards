@@ -1,51 +1,44 @@
 import React, { useEffect } from "react";
 import type { NextPage } from "next";
-import { User, PrismaClient } from "@prisma/client";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn, signOut, getSession } from "next-auth/react";
 import Router from "next/router";
 import { Layout, Button } from "antd";
-const { Header } = Layout;
-
-const prisma = new PrismaClient();
+import Header from "../src/commonComponents/header";
 
 export async function getServerSideProps(context) {
-  const { query } = context;
-  console.log({ query });
-  const user = await prisma.user.findUnique({
-    where: {
-      email: "david.paleyy@gmail.com",
-    },
-    select: {
-      classes: true,
-    },
-  });
+  const session = await getSession(context);
+  if (session) {
+    return {
+      redirect: {
+        destination: "/home",
+      },
+    };
+  }
+
   return {
-    props: {
-      user: user ? JSON.parse(JSON.stringify(user?.classes[0])) : null,
-    },
+    props: {},
   };
 }
 
-const LoginPage: NextPage<{ user }> = ({ user }) => {
-  console.log({ usuario: user?.userEmail });
-  const { data: session, status } = useSession();
+const LoginPage: NextPage = () => {
+  const { data } = useSession();
 
   useEffect(() => {
-    if (session) {
+    if (data) {
       Router.push("/home");
     }
-  }, [session]);
-  if (session) {
+  }, [data]);
+  if (data) {
     return (
       <>
-        Signed in as {session.user.email} <br />
+        Signed in as {data.user.email} <br />
         <Button onClick={() => signOut()}>Sign out</Button>
       </>
     );
   }
   return (
     <Layout>
-      <Header />
+      <Header isLogged={false} />
       <>
         Not signed in <br />
         <Button onClick={() => signIn()}>Sign in</Button>

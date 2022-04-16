@@ -18,22 +18,31 @@ import {
   PlusCircleOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import Head from "next/head";
 import { Typography } from "antd";
 import { ClassForDecks, Deck } from "@prisma/client";
 import { useQuery } from "react-query";
 import styles from "../styles/Home.module.css";
 import { getClasses } from "../src/api/classes";
 import CreateClassModal from "../src/home/CreateClassModal";
+import Header from "../src/commonComponents/header";
 import { CLASSES_QUERY } from "../src/constants";
 import React from "react";
 import AddNewDeckButton from "../src/home/AddNewDeckButton";
+import { getSession } from "next-auth/react";
 
 const { Title } = Typography;
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Footer, Sider } = Layout;
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/login",
+      },
+    };
+  }
   const classesForDecks = await getClasses();
 
   return {
@@ -77,11 +86,6 @@ const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
 
   return (
     <Layout>
-      <Head>
-        <title>Learning Cards!</title>
-        <meta name="description" content="Learn with space repetition!" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <Header />
       <Layout>
         <Sider>
