@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import type { NextPage } from "next";
 import { User, PrismaClient } from "@prisma/client";
 import { useSession, signIn, signOut } from "next-auth/react";
-
+import Router from "next/router";
 import { Layout, Button } from "antd";
 const { Header } = Layout;
 
@@ -29,7 +29,12 @@ export async function getServerSideProps(context) {
 const LoginPage: NextPage<{ user }> = ({ user }) => {
   console.log({ usuario: user?.userEmail });
   const { data: session, status } = useSession();
-  console.log({ session });
+
+  useEffect(() => {
+    if (session) {
+      Router.push("/home");
+    }
+  }, [session]);
   if (session) {
     return (
       <>
