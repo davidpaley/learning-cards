@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import type { NextPage } from "next";
 import { PrismaClient, Card as CardType } from "@prisma/client";
 import { useMutation, useQueryClient } from "react-query";
-import styles from "../../styles/PlayCards.module.css";
+import styles from "../../styles/play-cards.module.css";
 import { levelsValues, CARD_QUERY } from "../../src/constants";
 import { CreateOrUpdateCard, createOrUpdateCard } from "../../src/api/cards";
 import Header from "../../src/commonComponents/header";
