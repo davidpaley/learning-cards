@@ -8,6 +8,7 @@ import styles from "../styles/Home.module.css";
 import Sider from "antd/lib/layout/Sider";
 import SubMenu from "antd/lib/menu/SubMenu";
 import { Typography } from "antd";
+import Link from "next/link";
 
 const { Title } = Typography;
 
@@ -58,11 +59,11 @@ const Home: NextPage = ({ classesForDecks }: any) => {
       <Layout hasSider>
         <Content className={styles.main}>
           <h1 className={styles.title}>
-            Your <a href="https://nextjs.org">Classes</a>
+            Your <a href="https://nextjs.org">Cards</a>
           </h1>
 
           <div className={styles.grid}>
-            <h2>Decks added to the database</h2>
+            <h2>Start creating cards and learn more</h2>
             <br />
             {/* {decks && decks.map((deck: any) => (
               <p>{deck.name}</p>
@@ -92,9 +93,9 @@ const Home: NextPage = ({ classesForDecks }: any) => {
             </a> */}
           </div>
           <div>
-            <h2>New Deck &rarr;</h2>
-            <input />
-            <Button onClick={() => saveDeck()}>SAVE DECK</Button>
+            <Link href="/home">
+              <Button>START NOW</Button>
+            </Link>
           </div>
         </Content>
       </Layout>
