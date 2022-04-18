@@ -2,11 +2,8 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import { PrismaClient } from "@prisma/client";
-import { PlusCircleOutlined } from "@ant-design/icons";
-import { Button, Layout, Menu, Space } from "antd";
+import { Button, Layout, Menu } from "antd";
 import styles from "../styles/Home.module.css";
-import Sider from "antd/lib/layout/Sider";
-import SubMenu from "antd/lib/menu/SubMenu";
 import { Typography } from "antd";
 import Link from "next/link";
 
@@ -25,22 +22,6 @@ export async function getServerSideProps() {
   };
 }
 const Home: NextPage = ({ classesForDecks }: any) => {
-  const saveDeck = async () => {
-    const body = {
-      name: `Created Deck ${Math.random()}`,
-      userEmail: "david.paleyy@gmail.com",
-    };
-    const response = await fetch(`/api/decks`, {
-      method: "POST",
-      body: JSON.stringify(body),
-    });
-    if (!response.ok) throw new Error(response.statusText);
-    const responseJson = await response.json();
-  };
-
-  const addNewClass = () => {
-    console.log("add new class");
-  };
   return (
     <Layout hasSider={false}>
       <Head>

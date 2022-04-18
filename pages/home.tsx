@@ -191,8 +191,8 @@ const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
                 )}
               />
             )}
-            <AddNewDeckButton classId={selectedClass?.id} />
-            {!classes?.length && (
+
+            {!classes?.length ? (
               <Button
                 type="primary"
                 icon={<PlusOutlined className={styles.createNewClassIcon} />}
@@ -203,6 +203,8 @@ const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
                 {/* <Title className={styles.createClassTitle} level={3}>
                 </Title> */}
               </Button>
+            ) : (
+              <AddNewDeckButton classId={selectedClass?.id} />
             )}
           </div>
         </Content>

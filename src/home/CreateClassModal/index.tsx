@@ -3,6 +3,7 @@ import { Button, Form, Input, Modal, ModalProps, Space } from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { CLASSES_QUERY } from "../../constants";
 import * as api from "../../api/classes";
+// import { useSession } from "next-auth/react";
 
 interface CreateClassModalProps extends ModalProps {
   close: () => void;
@@ -15,6 +16,8 @@ interface CreateClassData {
 
 const CreateClassModal: FC<CreateClassModalProps> = (modalProps) => {
   const [form] = Form.useForm();
+  // TODO: use session data
+  // const { data: sessionData } = useSession();
   const queryClient = useQueryClient();
   const { isLoading, mutate: createClass } = useMutation(
     async ({ name, userEmail }: CreateClassData) => {

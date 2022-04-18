@@ -45,7 +45,17 @@ export async function getServerSideProps(context) {
   };
 }
 
-const Home: NextPage<{ deck: Deck }> = ({ deck }) => {
+export type HomeProp = {
+  deck: {
+    id: string;
+    classId: string;
+    name: string;
+    creationDate: Date;
+    cards: Card[];
+  };
+};
+
+const Home: NextPage<HomeProp> = ({ deck }: HomeProp) => {
   const queryClient = useQueryClient();
   const { data: deckForCards } = useQuery(
     [CARD_QUERY],

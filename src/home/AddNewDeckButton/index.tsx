@@ -6,7 +6,6 @@ import CreateNewDeckModal from "./CreateNewDeckModal";
 import styles from "./index.module.css";
 
 const AddNewDeckButton = ({ classId }: { classId: string }) => {
-  console.log({ classId });
   const [showModal, setShowModal] = useState(false);
   const handleShowModal = () => setShowModal((prevState) => !prevState);
   return (
