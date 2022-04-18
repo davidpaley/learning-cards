@@ -2,7 +2,7 @@ import Head from "next/head";
 import { Layout, Menu, Button, Dropdown } from "antd";
 import { LoginOutlined, LogoutOutlined, MenuOutlined } from "@ant-design/icons";
 import { signIn, signOut } from "next-auth/react";
-import style from "./index.module.css";
+import style from "./Header.module.css";
 
 const { Header: AntdHeader } = Layout;
 
