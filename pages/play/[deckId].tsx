@@ -5,13 +5,22 @@ import { useMutation, useQueryClient } from "react-query";
 import styles from "../../styles/PlayCards.module.css";
 import { levelsValues, CARD_QUERY } from "../../src/constants";
 import { CreateOrUpdateCard, createOrUpdateCard } from "../../src/api/cards";
-
+import Header from "../../src/commonComponents/header";
 import { Layout, Button, Row, Card, Typography, Col } from "antd";
+import { getSession } from "next-auth/react";
 const { Title, Text } = Typography;
-const { Header } = Layout;
+
 const prisma = new PrismaClient();
 
 export async function getServerSideProps(context) {
+  const session = await getSession(context);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/login",
+      },
+    };
+  }
   const { query } = context;
   const deck = await prisma.deck.findUnique({
     where: {
