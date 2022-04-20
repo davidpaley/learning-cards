@@ -1,3 +1,5 @@
+import { Session } from "next-auth";
+
 type CreateClass = {
   name: String;
   userEmail: String;
@@ -11,8 +13,8 @@ export const createClass = (body: CreateClass) => {
     body: JSON.stringify(body),
   });
 };
-export const getClasses = async () => {
-  const response = await fetch(URL);
+export const getClasses = async (session: Session) => {
+  const response = await fetch(`${URL}?email=${session.user.email}`);
   const classes = await response.json();
   return classes;
 };

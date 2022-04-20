@@ -29,13 +29,15 @@ import { CLASSES_QUERY } from "../src/constants";
 import React from "react";
 import AddNewDeckButton from "../src/home/AddNewDeckButton";
 import { getSession } from "next-auth/react";
+import { Session } from "next-auth";
+import { useSession } from "next-auth/react";
 
 const { Title } = Typography;
 
 const { Content, Footer, Sider } = Layout;
 
 export async function getServerSideProps(context) {
-  const session = await getSession(context);
+  const session: Session = await getSession(context);
   if (!session) {
     return {
       redirect: {
@@ -43,8 +45,7 @@ export async function getServerSideProps(context) {
       },
     };
   }
-  const classesForDecks = await getClasses();
-
+  const classesForDecks = await getClasses(session);
   return {
     props: {
       classesForDecks: JSON.parse(JSON.stringify(classesForDecks)),
@@ -59,14 +60,16 @@ interface ClassProp extends ClassForDecks {
 type HomeProps = { classesForDecks: ClassProp[] };
 
 const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
+  const { data: sessionData } = useSession();
   const { data: classes } = useQuery(
     [CLASSES_QUERY],
     async () => {
-      const classesForDecks = await getClasses();
+      const classesForDecks = await getClasses(sessionData);
       return classesForDecks;
     },
     {
       initialData: classesForDecks as any,
+      enabled: !!sessionData,
     }
   );
   const [selectedClass, setSelectedClass] = useState<ClassProp>(
