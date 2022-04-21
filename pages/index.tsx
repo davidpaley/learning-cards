@@ -7,20 +7,8 @@ import styles from "../styles/Home.module.css";
 import { Typography } from "antd";
 import Link from "next/link";
 
-const { Title } = Typography;
-
-const prisma = new PrismaClient();
-
 const { Content, Footer, Header } = Layout;
 
-export async function getServerSideProps() {
-  const classesForDecks = await prisma.classForDecks.findMany();
-  return {
-    props: {
-      classesForDecks: JSON.parse(JSON.stringify(classesForDecks)),
-    },
-  };
-}
 const Home: NextPage = ({ classesForDecks }: any) => {
   return (
     <Layout hasSider={false}>
