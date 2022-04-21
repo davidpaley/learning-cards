@@ -48,7 +48,10 @@ export default async (
         cards: true,
       },
     });
-    res.status(200).json({ data: foundDesks, isNotLogged: false });
+    res.status(200).json({
+      data: foundDesks,
+      isNotLogged: false,
+    });
     return;
   }
   return res.status(405).json({ message: "Method not allowed" } as any);
