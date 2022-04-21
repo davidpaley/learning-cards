@@ -1,19 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
-import { Card, Deck, ClassForDecks } from "@prisma/client";
+import { Deck } from "@prisma/client";
 import { getSession } from "next-auth/react";
 const prisma = new PrismaClient();
-
-type DeckData = {
-  name: string;
-  cards?: Card[];
-};
 
 interface DeckResponse
   extends Omit<Deck, "id" | "classId" | "creationDate" | "name"> {}
 export interface ResponseData {
   isNotLogged: boolean;
-  data?: DeckResponse;
+  data?: DeckResponse | DeckResponse[];
 }
 
 export default async (
