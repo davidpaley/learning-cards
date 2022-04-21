@@ -19,7 +19,7 @@ import {
   PlusOutlined,
 } from "@ant-design/icons";
 import { Typography } from "antd";
-import { ClassForDecks, Deck } from "@prisma/client";
+import { ClassForDecks, Deck, PrismaClient } from "@prisma/client";
 import { useQuery } from "react-query";
 import styles from "../styles/Home.module.css";
 import { getClasses } from "../src/api/classes";
@@ -36,6 +36,8 @@ const { Title } = Typography;
 
 const { Content, Footer, Sider } = Layout;
 
+const prisma = new PrismaClient();
+
 export async function getServerSideProps(context) {
   const session: Session = await getSession(context);
   if (!session) {
@@ -45,10 +47,20 @@ export async function getServerSideProps(context) {
       },
     };
   }
-  const classesForDecks = await getClasses(session);
+
+  const foundClasses = await prisma.classForDecks.findMany({
+    where: {
+      userEmail: session.user.email as string,
+    },
+    select: {
+      name: true,
+      decks: true,
+      id: true,
+    },
+  });
   return {
     props: {
-      classesForDecks: JSON.parse(JSON.stringify(classesForDecks)),
+      classesForDecks: foundClasses,
     },
   };
 }
@@ -59,12 +71,12 @@ interface ClassProp extends ClassForDecks {
 
 type HomeProps = { classesForDecks: ClassProp[] };
 
-const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
+const Home: NextPage<HomeProps> = ({ classesForDecks = [] }) => {
   const { data: sessionData } = useSession();
   const { data: classes } = useQuery(
     [CLASSES_QUERY],
     async () => {
-      const classesForDecks = await getClasses(sessionData);
+      const { data: classesForDecks } = await getClasses(sessionData);
       return classesForDecks;
     },
     {

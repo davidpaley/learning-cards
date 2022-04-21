@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient } from "@prisma/client";
+import { ClassForDecks, PrismaClient } from "@prisma/client";
 import { Deck } from "@prisma/client";
+import { getSession } from "next-auth/react";
 const prisma = new PrismaClient();
 
 type ClassData = {
@@ -8,16 +9,25 @@ type ClassData = {
   decks?: Deck[];
 };
 
-export default async (
-  req: NextApiRequest,
-  res: NextApiResponse<ClassData[] | { isNotLogged: boolean }>
-) => {
+interface CustomClass
+  extends Omit<ClassForDecks, "userEmail" | "creationDate"> {}
+
+export interface Response {
+  isNotLogged: boolean;
+  data?: CustomClass[];
+}
+
+export default async (req: NextApiRequest, res: NextApiResponse<Response>) => {
+  const session = await getSession({ req });
+  if (!session) {
+    res.status(200).json({ isNotLogged: true });
+  }
   if (req.method === "POST") {
     const data = JSON.parse(req.body);
     const saveClass = await prisma.classForDecks.create({
       data,
     });
-    res.status(200).json([saveClass]);
+    res.status(200).json({ data: [saveClass], isNotLogged: false });
     return;
   } else if (req.method === "GET") {
     const foundClasses = await prisma.classForDecks.findMany({
@@ -31,7 +41,7 @@ export default async (
       },
     });
 
-    res.status(200).json(foundClasses);
+    res.status(200).json({ data: foundClasses, isNotLogged: false });
     return;
   }
   return res.status(405).json({ message: "Method not allowed" } as any);
