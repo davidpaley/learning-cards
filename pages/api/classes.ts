@@ -32,7 +32,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Response>) => {
   } else if (req.method === "GET") {
     const foundClasses = await prisma.classForDecks.findMany({
       where: {
-        userEmail: req.query.email as string,
+        userEmail: session.user.email as string,
       },
       select: {
         name: true,
