@@ -19,7 +19,7 @@ import {
   PlusOutlined,
 } from "@ant-design/icons";
 import { Typography } from "antd";
-import { ClassForDecks, Deck, PrismaClient } from "@prisma/client";
+import { ClassForDecks, Deck, PrismaClient, User } from "@prisma/client";
 import { useQuery } from "react-query";
 import styles from "../styles/Home.module.css";
 import { getClasses } from "../src/api/classes";
@@ -58,6 +58,7 @@ export async function getServerSideProps(context) {
       id: true,
     },
   });
+
   return {
     props: {
       classesForDecks: foundClasses,
