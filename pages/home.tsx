@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { NextPage } from "next";
 import Link from "next/link";
 import {
@@ -19,7 +19,7 @@ import {
   PlusOutlined,
 } from "@ant-design/icons";
 import { Typography } from "antd";
-import { ClassForDecks, Deck, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { useQuery } from "react-query";
 import styles from "../styles/Home.module.css";
 import { getClasses } from "../src/api/classes";
@@ -31,6 +31,7 @@ import AddNewDeckButton from "../src/home/AddNewDeckButton";
 import { getSession } from "next-auth/react";
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
+import { ClassType } from "../src/types";
 
 const { Title } = Typography;
 
@@ -60,16 +61,12 @@ export async function getServerSideProps(context) {
   });
   return {
     props: {
-      classesForDecks: foundClasses,
+      classesForDecks: JSON.parse(JSON.stringify(foundClasses)),
     },
   };
 }
 
-interface ClassProp extends ClassForDecks {
-  decks: Deck[];
-}
-
-type HomeProps = { classesForDecks: ClassProp[] };
+type HomeProps = { classesForDecks: ClassType[] };
 
 const Home: NextPage<HomeProps> = ({ classesForDecks = [] }) => {
   const { data: sessionData } = useSession();
@@ -84,17 +81,13 @@ const Home: NextPage<HomeProps> = ({ classesForDecks = [] }) => {
       enabled: !!sessionData,
     }
   );
-  const [selectedClass, setSelectedClass] = useState<ClassProp>(
+  const [selectedClass, setSelectedClass] = useState<ClassType | null>(
     classesForDecks?.length ? classesForDecks[0] : null
   );
 
-  useEffect(() => {
-    const currentClass = classes.find((c) => c.name === selectedClass?.name);
-    if (currentClass) setSelectedClass(currentClass);
-  }, [classes, setSelectedClass]);
-
-  const changeSelectedClass = (newClassSelected: ClassProp) =>
+  const changeSelectedClass = (newClassSelected: ClassType) => {
     setSelectedClass(newClassSelected);
+  };
 
   const [isCreateClassModalVisible, setIsCreateClassModalVisible] =
     useState(false);
@@ -104,11 +97,15 @@ const Home: NextPage<HomeProps> = ({ classesForDecks = [] }) => {
       <Header />
       <Layout>
         <Sider>
-          <Menu theme="dark" defaultSelectedKeys={["0"]} mode="inline">
+          <Menu
+            theme="dark"
+            selectedKeys={[selectedClass?.id || "0"]}
+            mode="inline"
+          >
             {!!classes?.length &&
-              classes.map((item, index) => (
+              classes.map((item) => (
                 <Menu.Item
-                  key={index}
+                  key={item.id}
                   onClick={() => changeSelectedClass(item)}
                 >
                   {item.name}
@@ -228,6 +225,7 @@ const Home: NextPage<HomeProps> = ({ classesForDecks = [] }) => {
         Ant Design ©2018 Created by Ant UED
       </Footer>
       <CreateClassModal
+        onSuccess={changeSelectedClass}
         close={() => setIsCreateClassModalVisible(false)}
         visible={isCreateClassModalVisible}
       />

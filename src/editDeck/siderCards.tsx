@@ -30,7 +30,7 @@ const SidebarCards = ({
         mode="inline"
         onClick={cardSelected}
       >
-        {deckForCards?.cards.map((card, index) => {
+        {deckForCards?.cards.map((card) => {
           return (
             <Menu.Item key={card.id} style={{ padding: 5, minHeight: "150px" }}>
               <Card

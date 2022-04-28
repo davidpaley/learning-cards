@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import { Card } from "@prisma/client";
+import { getSession } from "next-auth/react";
 
 const prisma = new PrismaClient();
 
@@ -8,11 +9,12 @@ type NewCard = Partial<Card>;
 
 export default async (
   req: NextApiRequest,
-  res: NextApiResponse<Card | { login: boolean }>
+  res: NextApiResponse<Card | { isNotLogged: boolean }>
 ) => {
-  // TODO: Check user logged
-  // in a real world application you might read the user id from the session and then do a database request
-  // to get more information on the user if needed
+  const session = await getSession({ req });
+  if (!session) {
+    res.status(200).json({ isNotLogged: true });
+  }
   if (req.method === "POST") {
     const newCard: NewCard = JSON.parse(req.body);
     const { answer, question, level, nextReviewDate, isDone, id, deckId } =

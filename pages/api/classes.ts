@@ -1,20 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ClassForDecks, PrismaClient } from "@prisma/client";
-import { Deck } from "@prisma/client";
 import { getSession } from "next-auth/react";
 const prisma = new PrismaClient();
-
-type ClassData = {
-  name: string;
-  decks?: Deck[];
-};
 
 interface CustomClass
   extends Omit<ClassForDecks, "userEmail" | "creationDate"> {}
 
 export interface Response {
   isNotLogged: boolean;
-  data?: CustomClass[];
+  data?: CustomClass | CustomClass[];
 }
 
 export default async (req: NextApiRequest, res: NextApiResponse<Response>) => {
@@ -27,7 +21,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Response>) => {
     const saveClass = await prisma.classForDecks.create({
       data,
     });
-    res.status(200).json({ data: [saveClass], isNotLogged: false });
+    res.status(200).json({ data: saveClass, isNotLogged: false });
     return;
   } else if (req.method === "GET") {
     const foundClasses = await prisma.classForDecks.findMany({
