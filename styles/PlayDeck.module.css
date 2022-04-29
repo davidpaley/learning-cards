@@ -1,8 +1,13 @@
+.breadcrumb {
+  padding: 20px;
+  margin: "16px 10";
+}
+
 .siteCardBorderLessWrapper {
-  padding: 100px;
   background: #ececec;
   height: 100vh;
 }
+
 .revealAnswerButton {
   width: 900px;
   height: 100px;

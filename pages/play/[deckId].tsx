@@ -6,8 +6,18 @@ import styles from "../../styles/PlayDeck.module.css";
 import { levelsValues, CARD_QUERY } from "../../src/constants";
 import { CreateOrUpdateCard, createOrUpdateCard } from "../../src/api/cards";
 import Header from "../../src/commonComponents/header";
-import { Layout, Button, Row, Card, Typography, Col } from "antd";
+import {
+  Layout,
+  Button,
+  Row,
+  Card,
+  Typography,
+  Col,
+  Divider,
+  Breadcrumb,
+} from "antd";
 import { getSession } from "next-auth/react";
+import { HomeOutlined } from "@ant-design/icons";
 const { Title, Text } = Typography;
 
 const prisma = new PrismaClient();
@@ -41,11 +51,15 @@ export async function getServerSideProps(context) {
   return {
     props: {
       cardsToPlay: JSON.parse(JSON.stringify(cardsToShow)),
+      deckName: JSON.parse(JSON.stringify(deck.name)),
     },
   };
 }
 
-const PlayPage: NextPage<{ cardsToPlay: CardType[] }> = ({ cardsToPlay }) => {
+const PlayPage: NextPage<{ cardsToPlay: CardType[]; deckName: string }> = ({
+  cardsToPlay,
+  deckName,
+}) => {
   const queryClient = useQueryClient();
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [revealAnswerButton, setRevealAnswerButton] = useState(true);
@@ -118,6 +132,13 @@ const PlayPage: NextPage<{ cardsToPlay: CardType[] }> = ({ cardsToPlay }) => {
     <Layout>
       <Header />
       <div className={styles.siteCardBorderLessWrapper}>
+        <Breadcrumb className={styles.breadcrumb}>
+          <Breadcrumb.Item href="/home">
+            <HomeOutlined />
+          </Breadcrumb.Item>
+          <Breadcrumb.Item href="">{deckName}</Breadcrumb.Item>
+          <Breadcrumb.Item>{"Play Deck Cards"}</Breadcrumb.Item>
+        </Breadcrumb>
         {!emptyCardsForToday ? (
           <>
             <Row align="middle" justify="center">
@@ -197,6 +218,7 @@ const PlayPage: NextPage<{ cardsToPlay: CardType[] }> = ({ cardsToPlay }) => {
                 />
               }
             >
+              <Divider />
               <Card.Meta
                 title="All your cards for today are done!"
                 description="You don't have any more cards to resolve today! Go enjoy the day =)"

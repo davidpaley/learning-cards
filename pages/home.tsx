@@ -130,7 +130,7 @@ const Home: NextPage<HomeProps> = ({ classesForDecks = [] }) => {
         <Content className={styles.classContent}>
           <Row align="middle" justify="space-between">
             <Breadcrumb className={styles.breadcrumb}>
-              <Breadcrumb.Item>{selectedClass?.name}</Breadcrumb.Item>
+              <Breadcrumb.Item>{`${selectedClass?.name} decks`}</Breadcrumb.Item>
             </Breadcrumb>
             <Button
               danger
