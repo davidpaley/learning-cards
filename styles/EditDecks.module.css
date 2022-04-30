@@ -1,14 +1,13 @@
 /*cards, addcard, createNewCardButton, breadcrumb, card*/
 
 .breadcrumb {
-  padding: 20px;
-  margin: "16px 10";
+  padding: 1.25rem 0;
 }
 
 .textarea {
   margin: 0;
   line-height: 1.15;
-  padding: 20px;
+  padding: 1.25rem;
   font-size: 2rem;
   border: 1px solid #eaeaea;
 }
@@ -16,7 +15,7 @@
 .sideButtonContainer {
   display: flex;
   justify-content: center;
-  padding-top: 20px;
+  padding-top: 1.25rem;
 }
 
 .card {
@@ -70,18 +69,6 @@
 .cardMenu {
   display: flex;
 }
-/* .deleteCardButton {
-  color: white;
-  border: 0px;
-}
-.deleteCardButton:hover {
-  color: white;
-  border: 1px white solid;
-} */
-
-.deleteCardButton {
-  margin-right: 25px;
-}
 
 .content {
   height: 100vh;
@@ -115,4 +102,9 @@
 .saveEditButton {
   background-color: black;
   color: white;
+}
+
+.editDeckContent {
+  padding-left: 5rem;
+  padding-right: 5rem;
 }

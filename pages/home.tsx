@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { NextPage } from "next";
 import Link from "next/link";
 import {
@@ -19,7 +19,7 @@ import {
   PlusOutlined,
 } from "@ant-design/icons";
 import { Typography } from "antd";
-import { ClassForDecks, Deck } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { useQuery } from "react-query";
 import styles from "../styles/Home.module.css";
 import { getClasses } from "../src/api/classes";
@@ -29,13 +29,18 @@ import { CLASSES_QUERY } from "../src/constants";
 import React from "react";
 import AddNewDeckButton from "../src/home/AddNewDeckButton";
 import { getSession } from "next-auth/react";
+import { Session } from "next-auth";
+import { useSession } from "next-auth/react";
+import { ClassType } from "../src/types";
 
 const { Title } = Typography;
 
 const { Content, Footer, Sider } = Layout;
 
+const prisma = new PrismaClient();
+
 export async function getServerSideProps(context) {
-  const session = await getSession(context);
+  const session: Session = await getSession(context);
   if (!session) {
     return {
       redirect: {
@@ -43,43 +48,46 @@ export async function getServerSideProps(context) {
       },
     };
   }
-  const classesForDecks = await getClasses();
 
+  const foundClasses = await prisma.classForDecks.findMany({
+    where: {
+      userEmail: session.user.email,
+    },
+    select: {
+      name: true,
+      decks: true,
+      id: true,
+    },
+  });
   return {
     props: {
-      classesForDecks: JSON.parse(JSON.stringify(classesForDecks)),
+      classesForDecks: JSON.parse(JSON.stringify(foundClasses)),
     },
   };
 }
 
-interface ClassProp extends ClassForDecks {
-  decks: Deck[];
-}
+type HomeProps = { classesForDecks: ClassType[] };
 
-type HomeProps = { classesForDecks: ClassProp[] };
-
-const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
+const Home: NextPage<HomeProps> = ({ classesForDecks = [] }) => {
+  const { data: sessionData } = useSession();
   const { data: classes } = useQuery(
     [CLASSES_QUERY],
     async () => {
-      const classesForDecks = await getClasses();
+      const { data: classesForDecks } = await getClasses();
       return classesForDecks;
     },
     {
       initialData: classesForDecks as any,
+      enabled: !!sessionData,
     }
   );
-  const [selectedClass, setSelectedClass] = useState<ClassProp>(
+  const [selectedClass, setSelectedClass] = useState<ClassType | null>(
     classesForDecks?.length ? classesForDecks[0] : null
   );
 
-  useEffect(() => {
-    const currentClass = classes.find((c) => c.name === selectedClass?.name);
-    if (currentClass) setSelectedClass(currentClass);
-  }, [classes, setSelectedClass]);
-
-  const changeSelectedClass = (newClassSelected: ClassProp) =>
+  const changeSelectedClass = (newClassSelected: ClassType) => {
     setSelectedClass(newClassSelected);
+  };
 
   const [isCreateClassModalVisible, setIsCreateClassModalVisible] =
     useState(false);
@@ -89,11 +97,15 @@ const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
       <Header />
       <Layout>
         <Sider>
-          <Menu theme="dark" defaultSelectedKeys={["0"]} mode="inline">
+          <Menu
+            theme="dark"
+            selectedKeys={[selectedClass?.id || "0"]}
+            mode="inline"
+          >
             {!!classes?.length &&
-              classes.map((item, index) => (
+              classes.map((item) => (
                 <Menu.Item
-                  key={index}
+                  key={item.id}
                   onClick={() => changeSelectedClass(item)}
                 >
                   {item.name}
@@ -118,7 +130,7 @@ const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
         <Content className={styles.classContent}>
           <Row align="middle" justify="space-between">
             <Breadcrumb className={styles.breadcrumb}>
-              <Breadcrumb.Item>{selectedClass?.name}</Breadcrumb.Item>
+              <Breadcrumb.Item>{`${selectedClass?.name} decks`}</Breadcrumb.Item>
             </Breadcrumb>
             <Button
               danger
@@ -213,6 +225,7 @@ const Home: NextPage<HomeProps> = ({ classesForDecks }) => {
         Ant Design ©2018 Created by Ant UED
       </Footer>
       <CreateClassModal
+        onSuccess={changeSelectedClass}
         close={() => setIsCreateClassModalVisible(false)}
         visible={isCreateClassModalVisible}
       />

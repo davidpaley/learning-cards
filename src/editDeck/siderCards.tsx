@@ -30,17 +30,18 @@ const SidebarCards = ({
         mode="inline"
         onClick={cardSelected}
       >
-        {deckForCards?.cards.map((card, index) => {
-          return (
-            <Menu.Item key={card.id} style={{ padding: 5, minHeight: "150px" }}>
-              <Card
-                title={card.question}
-                bordered={false}
-                className={styles.cards}
-              />
-            </Menu.Item>
-          );
-        })}
+        {!!deckForCards?.cards?.length &&
+          deckForCards?.cards.map(({ id, question }) => {
+            return (
+              <Menu.Item key={id} style={{ padding: 5, minHeight: "150px" }}>
+                <Card
+                  title={question}
+                  bordered={false}
+                  className={styles.cards}
+                />
+              </Menu.Item>
+            );
+          })}
       </Menu>
       <div className={styles.sideButtonContainer}>
         <Button
