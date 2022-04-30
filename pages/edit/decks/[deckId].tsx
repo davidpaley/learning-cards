@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import type { NextPage } from "next";
-import { PrismaClient, Card, Deck } from "@prisma/client";
+import { PrismaClient, Card, Deck, ClassForDecks } from "@prisma/client";
 import styles from "../../../styles/EditDecks.module.css";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { getDeck } from "../../../src/api/decks";
@@ -13,6 +13,7 @@ import SidebarCards from "../../../src/editDeck/siderCards";
 import FormCardsEdit from "../../../src/editDeck/formCards";
 import DeleteCardModal from "../../../src/editDeck/deleteCards";
 import { getSession } from "next-auth/react";
+import { HomeOutlined } from "@ant-design/icons";
 
 const { Content, Footer } = Layout;
 const prisma = new PrismaClient();
@@ -38,6 +39,7 @@ export async function getServerSideProps(context) {
       id: true,
     },
   });
+
   return {
     props: {
       deck: JSON.parse(JSON.stringify(deck)),
@@ -45,13 +47,24 @@ export async function getServerSideProps(context) {
   };
 }
 
-const Home: NextPage<{ deck: Deck }> = ({ deck }) => {
+export type HomeProp = {
+  deck: {
+    id: string;
+    classId: string;
+    name: string;
+    creationDate: Date;
+    cards: Card[];
+    classOfDeck: ClassForDecks;
+  };
+};
+
+const Home: NextPage<HomeProp> = ({ deck }: HomeProp) => {
   const queryClient = useQueryClient();
   const { data: deckForCards } = useQuery(
     [CARD_QUERY],
     async () => {
       const deckResponse = await getDeck(deck.id);
-      return deckResponse;
+      return deckResponse.data;
     },
     {
       initialData: deck as Deck,
@@ -112,12 +125,14 @@ const Home: NextPage<{ deck: Deck }> = ({ deck }) => {
           deckForCards={deckForCards}
           handleCreateOrUpdateCard={handleCreateOrUpdateCard}
         />
-        <Content>
+        <Content className={styles.editDeckContent}>
           <Row align="middle" justify="space-between">
             <Breadcrumb className={styles.breadcrumb}>
-              <Breadcrumb.Item>{deckForCards.name}</Breadcrumb.Item>
-              <Breadcrumb.Item>{deckForCards.name}</Breadcrumb.Item>
-              {/* <Breadcrumb.Item>{selectedCard.id}</Breadcrumb.Item> */}
+              <Breadcrumb.Item href="/home">
+                <HomeOutlined />
+              </Breadcrumb.Item>
+              <Breadcrumb.Item href="">{deckForCards.name}</Breadcrumb.Item>
+              <Breadcrumb.Item>{"Edit Deck"}</Breadcrumb.Item>
             </Breadcrumb>
             <DeleteCardModal
               selectedCard={selectedCard}

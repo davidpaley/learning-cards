@@ -2,44 +2,14 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import { PrismaClient } from "@prisma/client";
-import { PlusCircleOutlined } from "@ant-design/icons";
-import { Button, Layout, Menu, Space } from "antd";
+import { Button, Layout, Menu } from "antd";
 import styles from "../styles/Home.module.css";
-import Sider from "antd/lib/layout/Sider";
-import SubMenu from "antd/lib/menu/SubMenu";
 import { Typography } from "antd";
-
-const { Title } = Typography;
-
-const prisma = new PrismaClient();
+import Link from "next/link";
 
 const { Content, Footer, Header } = Layout;
 
-export async function getServerSideProps() {
-  const classesForDecks = await prisma.classForDecks.findMany();
-  return {
-    props: {
-      classesForDecks: JSON.parse(JSON.stringify(classesForDecks)),
-    },
-  };
-}
 const Home: NextPage = ({ classesForDecks }: any) => {
-  const saveDeck = async () => {
-    const body = {
-      name: `Created Deck ${Math.random()}`,
-      userEmail: "david.paleyy@gmail.com",
-    };
-    const response = await fetch(`/api/decks`, {
-      method: "POST",
-      body: JSON.stringify(body),
-    });
-    if (!response.ok) throw new Error(response.statusText);
-    const responseJson = await response.json();
-  };
-
-  const addNewClass = () => {
-    console.log("add new class");
-  };
   return (
     <Layout hasSider={false}>
       <Head>
@@ -58,11 +28,11 @@ const Home: NextPage = ({ classesForDecks }: any) => {
       <Layout hasSider>
         <Content className={styles.main}>
           <h1 className={styles.title}>
-            Your <a href="https://nextjs.org">Classes</a>
+            Your <a href="https://nextjs.org">Cards</a>
           </h1>
 
           <div className={styles.grid}>
-            <h2>Decks added to the database</h2>
+            <h2>Start creating cards and learn more</h2>
             <br />
             {/* {decks && decks.map((deck: any) => (
               <p>{deck.name}</p>
@@ -92,9 +62,9 @@ const Home: NextPage = ({ classesForDecks }: any) => {
             </a> */}
           </div>
           <div>
-            <h2>New Deck &rarr;</h2>
-            <input />
-            <Button onClick={() => saveDeck()}>SAVE DECK</Button>
+            <Link href="/home">
+              <Button>START NOW</Button>
+            </Link>
           </div>
         </Content>
       </Layout>

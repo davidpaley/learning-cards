@@ -3,10 +3,9 @@ import { Button } from "antd";
 
 import { useState } from "react";
 import CreateNewDeckModal from "./CreateNewDeckModal";
-import styles from "./index.module.css";
+import styles from "./AddNewDeckButton.module.css";
 
 const AddNewDeckButton = ({ classId }: { classId: string }) => {
-  console.log({ classId });
   const [showModal, setShowModal] = useState(false);
   const handleShowModal = () => setShowModal((prevState) => !prevState);
   return (
