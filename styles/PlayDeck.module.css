@@ -1,6 +1,6 @@
 .breadcrumb {
-  padding: 20px;
-  margin: "16px 10";
+  padding: 1.25rem;
+  margin: 1rem 0.625rem;
 }
 
 .siteCardBorderLessWrapper {
@@ -9,15 +9,15 @@
 }
 
 .revealAnswerButton {
-  width: 900px;
-  height: 100px;
-  margin-top: 20px;
+  width: 56.25rem;
+  height: 6.25rem;
+  margin-top: 1.5625rem;
   background-color: black;
 }
 
 .answerTitle {
   color: white !important;
-  font-size: 25px !important;
+  font-size: 1.5625rem !important;
 }
 
 .allButtonLevel {

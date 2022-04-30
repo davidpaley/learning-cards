@@ -73,7 +73,7 @@ const Home: NextPage<HomeProps> = ({ classesForDecks = [] }) => {
   const { data: classes } = useQuery(
     [CLASSES_QUERY],
     async () => {
-      const { data: classesForDecks } = await getClasses(sessionData);
+      const { data: classesForDecks } = await getClasses();
       return classesForDecks;
     },
     {

@@ -31,14 +31,11 @@ const SidebarCards = ({
         onClick={cardSelected}
       >
         {!!deckForCards?.cards?.length &&
-          deckForCards?.cards.map((card) => {
+          deckForCards?.cards.map(({ id, question }) => {
             return (
-              <Menu.Item
-                key={card.id}
-                style={{ padding: 5, minHeight: "150px" }}
-              >
+              <Menu.Item key={id} style={{ padding: 5, minHeight: "150px" }}>
                 <Card
-                  title={card.question}
+                  title={question}
                   bordered={false}
                   className={styles.cards}
                 />
