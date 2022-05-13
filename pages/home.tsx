@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import Link from "next/link";
 import {
@@ -85,6 +85,13 @@ const Home: NextPage<HomeProps> = ({ classesForDecks = [] }) => {
     classesForDecks?.length ? classesForDecks[0] : null
   );
 
+  useEffect(() => {
+    const classFound = classes.find(
+      (singleClass) => singleClass.name === selectedClass.name
+    );
+    setSelectedClass(classFound);
+  }, [classes]);
+
   const changeSelectedClass = (newClassSelected: ClassType) => {
     setSelectedClass(newClassSelected);
   };
@@ -152,14 +159,6 @@ const Home: NextPage<HomeProps> = ({ classesForDecks = [] }) => {
                     <List.Item
                       className={styles.classListItem}
                       key={deck.id}
-                      // actions={[
-                      //   <Progress
-                      //     percent={30}
-                      //     size="small"
-                      //     status="active"
-                      //     type="circle"
-                      //   />,
-                      // ]}
                       extra={
                         <Space
                           direction="horizontal"
@@ -212,8 +211,6 @@ const Home: NextPage<HomeProps> = ({ classesForDecks = [] }) => {
                 style={{ width: "100%", height: "90px", fontSize: "1.5rem" }}
               >
                 Create your first Class!
-                {/* <Title className={styles.createClassTitle} level={3}>
-                </Title> */}
               </Button>
             ) : (
               <AddNewDeckButton classId={selectedClass?.id} />

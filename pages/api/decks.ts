@@ -37,6 +37,7 @@ export default async (
           cards: true,
           name: true,
           classOfDeck: true,
+          id: true,
         },
       });
       res.status(200).json({ data: deck, isNotLogged: false });

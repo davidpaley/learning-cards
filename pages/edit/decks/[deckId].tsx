@@ -2,7 +2,13 @@ import React, { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import { PrismaClient, Card, Deck, ClassForDecks } from "@prisma/client";
 import styles from "../../../styles/EditDecks.module.css";
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  QueryClient,
+  dehydrate,
+} from "react-query";
 import { getDeck } from "../../../src/api/decks";
 import { CARD_QUERY } from "../../../src/constants";
 import Header from "../../../src/commonComponents/header";
@@ -28,6 +34,7 @@ export async function getServerSideProps(context) {
     };
   }
   const { query } = context;
+  /////
   const deck = await prisma.deck.findUnique({
     where: {
       id: query.deckId,
@@ -39,8 +46,14 @@ export async function getServerSideProps(context) {
       id: true,
     },
   });
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery([CARD_QUERY, query.deckId]);
 
   return {
+    // props: {
+    //   dehydratedState: dehydrate(queryClient),
+    //   deckId: query
+    // },
     props: {
       deck: JSON.parse(JSON.stringify(deck)),
     },
@@ -61,7 +74,7 @@ export type HomeProp = {
 const Home: NextPage<HomeProp> = ({ deck }: HomeProp) => {
   const queryClient = useQueryClient();
   const { data: deckForCards } = useQuery(
-    [CARD_QUERY],
+    [CARD_QUERY, deck.id],
     async () => {
       const deckResponse = await getDeck(deck.id);
       return deckResponse.data;
