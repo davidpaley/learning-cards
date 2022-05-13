@@ -20,7 +20,7 @@ import {
 } from "@ant-design/icons";
 import { Typography } from "antd";
 import { PrismaClient } from "@prisma/client";
-import { useQuery } from "react-query";
+import { dehydrate, QueryClient, useQuery } from "react-query";
 import styles from "../styles/Home.module.css";
 import { getClasses } from "../src/api/classes";
 import CreateClassModal from "../src/home/CreateClassModal";
@@ -49,26 +49,30 @@ export async function getServerSideProps(context) {
     };
   }
 
-  const foundClasses = await prisma.classForDecks.findMany({
-    where: {
-      userEmail: session.user.email,
-    },
-    select: {
-      name: true,
-      decks: true,
-      id: true,
-    },
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery([CLASSES_QUERY], async () => {
+    const foundClasses = await prisma.classForDecks.findMany({
+      where: {
+        userEmail: session.user.email,
+      },
+      select: {
+        name: true,
+        decks: true,
+        id: true,
+      },
+    });
+    return JSON.parse(JSON.stringify(foundClasses));
   });
   return {
     props: {
-      classesForDecks: JSON.parse(JSON.stringify(foundClasses)),
+      dehydratedState: dehydrate(queryClient),
     },
   };
 }
 
-type HomeProps = { classesForDecks: ClassType[] };
+// type HomeProps = { classesForDecks: ClassType[] };
 
-const Home: NextPage<HomeProps> = ({ classesForDecks = [] }) => {
+const Home: NextPage = () => {
   const { data: sessionData } = useSession();
   const { data: classes } = useQuery(
     [CLASSES_QUERY],
@@ -77,12 +81,11 @@ const Home: NextPage<HomeProps> = ({ classesForDecks = [] }) => {
       return classesForDecks;
     },
     {
-      initialData: classesForDecks as any,
       enabled: !!sessionData,
     }
   );
   const [selectedClass, setSelectedClass] = useState<ClassType | null>(
-    classesForDecks?.length ? classesForDecks[0] : null
+    classes?.length ? classes[0] : null
   );
 
   useEffect(() => {

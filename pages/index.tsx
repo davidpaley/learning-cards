@@ -1,15 +1,13 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import { PrismaClient } from "@prisma/client";
 import { Button, Layout, Menu } from "antd";
 import styles from "../styles/Home.module.css";
-import { Typography } from "antd";
 import Link from "next/link";
 
 const { Content, Footer, Header } = Layout;
 
-const Home: NextPage = ({ classesForDecks }: any) => {
+const Home: NextPage = () => {
   return (
     <Layout hasSider={false}>
       <Head>
