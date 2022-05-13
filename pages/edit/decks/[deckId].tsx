@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import type { NextPage } from "next";
-import { PrismaClient, Card, Deck, ClassForDecks } from "@prisma/client";
+import { PrismaClient, Card } from "@prisma/client";
 import styles from "../../../styles/EditDecks.module.css";
 import {
   useQuery,
@@ -33,59 +33,55 @@ export async function getServerSideProps(context) {
       },
     };
   }
-  const { query } = context;
-  /////
-  const deck = await prisma.deck.findUnique({
-    where: {
-      id: query.deckId,
-    },
-    select: {
-      cards: true,
-      name: true,
-      classOfDeck: true,
-      id: true,
-    },
-  });
+  const {
+    query: { deckId },
+  } = context;
+
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery([CARD_QUERY, query.deckId]);
+  await queryClient.prefetchQuery([CARD_QUERY, deckId], async () => {
+    const deck = await prisma.deck.findUnique({
+      where: {
+        id: deckId,
+      },
+      select: {
+        cards: true,
+        name: true,
+        classOfDeck: true,
+        id: true,
+      },
+    });
+    return JSON.parse(JSON.stringify(deck));
+  });
 
   return {
-    // props: {
-    //   dehydratedState: dehydrate(queryClient),
-    //   deckId: query
-    // },
     props: {
-      deck: JSON.parse(JSON.stringify(deck)),
+      dehydratedState: dehydrate(queryClient),
+      deckId,
     },
   };
 }
 
 export type HomeProp = {
-  deck: {
-    id: string;
-    classId: string;
-    name: string;
-    creationDate: Date;
-    cards: Card[];
-    classOfDeck: ClassForDecks;
-  };
+  // deck: {
+  //   id: string;
+  //   classId: string;
+  //   name: string;
+  //   creationDate: Date;
+  //   cards: Card[];
+  //   classOfDeck: ClassForDecks;
+  // };
+  deckId: string;
 };
 
-const Home: NextPage<HomeProp> = ({ deck }: HomeProp) => {
+const Home: NextPage<HomeProp> = ({ deckId }: HomeProp) => {
   const queryClient = useQueryClient();
-  const { data: deckForCards } = useQuery(
-    [CARD_QUERY, deck.id],
-    async () => {
-      const deckResponse = await getDeck(deck.id);
-      return deckResponse.data;
-    },
-    {
-      initialData: deck as Deck,
-    }
-  );
+  const { data: deckForCards } = useQuery([CARD_QUERY, deckId], async () => {
+    const deckResponse = await getDeck(deckId);
+    return deckResponse.data;
+  });
 
   const [selectedCard, setSelectedCard] = useState<Card>(
-    deck?.cards?.length ? deck?.cards[0] : null
+    deckForCards?.cards?.length ? deckForCards?.cards[0] : null
   );
 
   const { mutate: handleCreateOrUpdateCard } = useMutation(
@@ -98,7 +94,6 @@ const Home: NextPage<HomeProp> = ({ deck }: HomeProp) => {
       onError: (err) => {
         console.log(err);
       },
-      // Always refetch after error or success:
       onSettled: () => {
         queryClient.invalidateQueries([CARD_QUERY]);
       },
@@ -110,22 +105,22 @@ const Home: NextPage<HomeProp> = ({ deck }: HomeProp) => {
   );
 
   const [form] = Form.useForm();
-  useEffect(() => form.resetFields(), [deck, selectedCard]);
+  useEffect(() => form.resetFields(), [deckForCards, selectedCard]);
 
   const handleFormSubmit = (value: { question: string; answer: string }) => {
-    const card = selectedCard ? selectedCard : { deckId: deck.id };
+    const card = selectedCard ? selectedCard : { deckId: deckId };
     handleCreateOrUpdateCard({ ...card, ...value });
   };
 
   const cardSelected = (event) => {
-    const cardSelected = deckForCards.cards.find(
+    const cardSelected = deckForCards?.cards.find(
       (card) => card.id === event.key
     );
     setSelectedCard(cardSelected);
   };
 
   const setSelectedCardWhenDeleteCard = () => {
-    setSelectedCard(deck?.cards[0]);
+    setSelectedCard(deckForCards?.cards[0]);
   };
 
   return (
@@ -144,7 +139,7 @@ const Home: NextPage<HomeProp> = ({ deck }: HomeProp) => {
               <Breadcrumb.Item href="/home">
                 <HomeOutlined />
               </Breadcrumb.Item>
-              <Breadcrumb.Item href="">{deckForCards.name}</Breadcrumb.Item>
+              <Breadcrumb.Item href="">{deckForCards?.name}</Breadcrumb.Item>
               <Breadcrumb.Item>{"Edit Deck"}</Breadcrumb.Item>
             </Breadcrumb>
             <DeleteCardModal
