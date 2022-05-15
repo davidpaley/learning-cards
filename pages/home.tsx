@@ -31,7 +31,7 @@ import AddNewDeckButton from "../src/home/AddNewDeckButton";
 import { getSession } from "next-auth/react";
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
-import { ClassType } from "../src/types";
+import { CustomClass } from "../src/types";
 
 const { Title } = Typography;
 
@@ -70,8 +70,6 @@ export async function getServerSideProps(context) {
   };
 }
 
-// type HomeProps = { classesForDecks: ClassType[] };
-
 const Home: NextPage = () => {
   const { data: sessionData } = useSession();
   const { data: classes } = useQuery(
@@ -84,7 +82,7 @@ const Home: NextPage = () => {
       enabled: !!sessionData,
     }
   );
-  const [selectedClass, setSelectedClass] = useState<ClassType | null>(
+  const [selectedClass, setSelectedClass] = useState<CustomClass | null>(
     classes?.length ? classes[0] : null
   );
 
@@ -95,7 +93,7 @@ const Home: NextPage = () => {
     setSelectedClass(classFound);
   }, [classes]);
 
-  const changeSelectedClass = (newClassSelected: ClassType) => {
+  const changeSelectedClass = (newClassSelected: CustomClass) => {
     setSelectedClass(newClassSelected);
   };
 

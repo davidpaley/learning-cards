@@ -1,10 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ClassForDecks, PrismaClient } from "@prisma/client";
 import { getSession } from "next-auth/react";
+import { CustomClass } from "../../src/types";
 const prisma = new PrismaClient();
-
-interface CustomClass
-  extends Omit<ClassForDecks, "userEmail" | "creationDate"> {}
 
 export interface Response {
   isNotLogged: boolean;

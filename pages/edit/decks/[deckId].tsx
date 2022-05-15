@@ -20,6 +20,7 @@ import FormCardsEdit from "../../../src/editDeck/formCards";
 import DeleteCardModal from "../../../src/editDeck/deleteCards";
 import { getSession } from "next-auth/react";
 import { HomeOutlined } from "@ant-design/icons";
+import { CardForm } from "../../../src/types";
 
 const { Content, Footer } = Layout;
 const prisma = new PrismaClient();
@@ -107,7 +108,7 @@ const Home: NextPage<HomeProp> = ({ deckId }: HomeProp) => {
   const [form] = Form.useForm();
   useEffect(() => form.resetFields(), [deckForCards, selectedCard]);
 
-  const handleFormSubmit = (value: { question: string; answer: string }) => {
+  const handleFormSubmit = (value: CardForm) => {
     const card = selectedCard ? selectedCard : { deckId: deckId };
     handleCreateOrUpdateCard({ ...card, ...value });
   };

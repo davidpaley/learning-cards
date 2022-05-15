@@ -9,7 +9,7 @@ type NewCard = Partial<Card>;
 
 export default async (
   req: NextApiRequest,
-  res: NextApiResponse<Card | { isNotLogged: boolean }>
+  res: NextApiResponse<Card | { isNotLogged?: boolean; message?: string }>
 ) => {
   const session = await getSession({ req });
   if (!session) {
@@ -60,5 +60,5 @@ export default async (
     res.status(200).json(deleteCard);
     return;
   }
-  return res.status(405).json({ message: "Method not allowed" } as any);
+  return res.status(405).json({ message: "Method not allowed" });
 };

@@ -5,6 +5,7 @@ import { Button, Input, Form, Divider, FormInstance } from "antd";
 
 import { SaveOutlined } from "@ant-design/icons";
 import { Card } from "@prisma/client";
+import { CardForm } from "../types";
 
 interface FormParams {
   question: string;
@@ -12,7 +13,7 @@ interface FormParams {
 }
 
 interface FormCardEditArgs {
-  form: FormInstance<any>;
+  form: FormInstance<CardForm>;
   selectedCard: Card;
   handleFormSubmit: (value: FormParams) => void;
 }

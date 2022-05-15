@@ -1,3 +1,5 @@
+import { CustomClass } from "../types";
+
 type CreateClass = {
   name: String;
   userEmail: String;
@@ -11,7 +13,7 @@ export const createClass = (body: CreateClass) => {
     body: JSON.stringify(body),
   });
 };
-export const getClasses = async () => {
+export const getClasses = async (): Promise<{ data: CustomClass[] }> => {
   const response = await fetch(URL);
   const classes = await response.json();
   return classes;

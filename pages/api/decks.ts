@@ -1,11 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
-import { Deck } from "@prisma/client";
 import { getSession } from "next-auth/react";
+import { DeckResponse } from "../../src/types";
 const prisma = new PrismaClient();
 
-interface DeckResponse
-  extends Omit<Deck, "id" | "classId" | "creationDate" | "name"> {}
 export interface ResponseData {
   isNotLogged: boolean;
   data?: DeckResponse | DeckResponse[];
