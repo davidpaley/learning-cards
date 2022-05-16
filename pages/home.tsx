@@ -32,6 +32,7 @@ import { getSession } from "next-auth/react";
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import { CustomClass } from "../src/types";
+import DeleteClassModal from "../src/home/DeleteClassModal";
 
 const { Title } = Typography;
 
@@ -97,6 +98,9 @@ const Home: NextPage = () => {
     setSelectedClass(newClassSelected);
   };
 
+  const setSelectedClassWhenDeleteClass = () => {
+    setSelectedClass(classes[0]);
+  };
   const [isCreateClassModalVisible, setIsCreateClassModalVisible] =
     useState(false);
 
@@ -138,15 +142,14 @@ const Home: NextPage = () => {
         <Content className={styles.classContent}>
           <Row align="middle" justify="space-between">
             <Breadcrumb className={styles.breadcrumb}>
-              <Breadcrumb.Item>{`${selectedClass?.name} decks`}</Breadcrumb.Item>
+              <Breadcrumb.Item>{`${
+                selectedClass?.name || ""
+              } decks`}</Breadcrumb.Item>
             </Breadcrumb>
-            <Button
-              danger
-              className={styles.deleteCardButton}
-              icon={<DeleteOutlined />}
-            >
-              Delete Class
-            </Button>
+            <DeleteClassModal
+              selectedClass={selectedClass}
+              setSelectedClassWhenDeleteClass={setSelectedClassWhenDeleteClass}
+            />
           </Row>
           <div className={styles.classList}>
             <Divider />

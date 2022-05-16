@@ -35,6 +35,20 @@ export default async (req: NextApiRequest, res: NextApiResponse<Response>) => {
 
     res.status(200).json({ data: foundClasses, isNotLogged: false });
     return;
+  } else if (req.method === "DELETE") {
+    const classId = JSON.parse(req.body);
+    const deleteDecks = await prisma.deck.deleteMany({
+      where: {
+        classId: classId.id as string,
+      },
+    });
+    const deleteClass = await prisma.classForDecks.delete({
+      where: {
+        id: classId.id as string,
+      },
+    });
+    res.status(200).json({ data: deleteClass, isNotLogged: false });
+    return;
   }
   return res.status(405).json({ message: "Method not allowed" } as any);
 };
