@@ -52,6 +52,15 @@ export default async (
       isNotLogged: false,
     });
     return;
+  } else if (req.method === "DELETE") {
+    const deck = JSON.parse(req.body);
+    const deleteDeck = await prisma.deck.delete({
+      where: {
+        id: deck.id as string,
+      },
+    });
+    res.status(200).json({ data: deleteDeck, isNotLogged: false });
+    return;
   }
   return res.status(405).json({ message: "Method not allowed" } as any);
 };
