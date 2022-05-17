@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 export interface Response {
   isNotLogged: boolean;
-  data?: CustomClass | CustomClass[];
+  data?: CustomClass | CustomClass[] | ClassForDecks;
 }
 
 export default async (req: NextApiRequest, res: NextApiResponse<Response>) => {
@@ -34,6 +34,20 @@ export default async (req: NextApiRequest, res: NextApiResponse<Response>) => {
     });
 
     res.status(200).json({ data: foundClasses, isNotLogged: false });
+    return;
+  } else if (req.method === "DELETE") {
+    const { id } = JSON.parse(req.body);
+    await prisma.deck.deleteMany({
+      where: {
+        classId: id as string,
+      },
+    });
+    const deleteClass = await prisma.classForDecks.delete({
+      where: {
+        id,
+      },
+    });
+    res.status(200).json({ data: deleteClass, isNotLogged: false });
     return;
   }
   return res.status(405).json({ message: "Method not allowed" } as any);

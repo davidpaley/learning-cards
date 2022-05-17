@@ -4,11 +4,11 @@ import { useMutation, useQueryClient } from "react-query";
 import { CLASSES_QUERY } from "../../constants";
 import * as api from "../../api/classes";
 import { useSession } from "next-auth/react";
-import { ClassType } from "../../types";
+import { CustomClass } from "../../types";
 
 interface CreateClassModalProps extends ModalProps {
   close: () => void;
-  onSuccess: (name: ClassType) => void;
+  onSuccess: (name: CustomClass) => void;
 }
 
 interface CreateClassData {
@@ -38,7 +38,7 @@ const CreateClassModal: FC<CreateClassModalProps> = (modalProps) => {
         queryClient.invalidateQueries([CLASSES_QUERY]);
       },
 
-      onSuccess: (response: { data: ClassType }) => {
+      onSuccess: (response: { data: CustomClass }) => {
         modalProps.onSuccess(response.data);
         modalProps.close();
       },
