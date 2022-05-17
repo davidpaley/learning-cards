@@ -98,8 +98,8 @@ const Home: NextPage = () => {
     setSelectedClass(newClassSelected);
   };
 
-  const setSelectedClassWhenDeleteClass = () => {
-    setSelectedClass(classes[0]);
+  const updateSelectedClassAfterDelete = () => {
+    setSelectedClass(classes.length ? classes[0] : null);
   };
   const [isCreateClassModalVisible, setIsCreateClassModalVisible] =
     useState(false);
@@ -148,7 +148,7 @@ const Home: NextPage = () => {
             </Breadcrumb>
             <DeleteClassModal
               selectedClass={selectedClass}
-              setSelectedClassWhenDeleteClass={setSelectedClassWhenDeleteClass}
+              updateSelectedClassAfterDelete={updateSelectedClassAfterDelete}
             />
           </Row>
           <div className={styles.classList}>

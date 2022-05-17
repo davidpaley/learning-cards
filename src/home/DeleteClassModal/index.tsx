@@ -8,15 +8,11 @@ import { deleteClass, DeleteClass } from "../../../src/api/classes";
 
 const DeleteClassModal = ({
   selectedClass,
-  setSelectedClassWhenDeleteClass,
+  updateSelectedClassAfterDelete,
 }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const queryClient = useQueryClient();
-  const {
-    isLoading,
-    error,
-    mutate: handleDeleteClass,
-  } = useMutation(
+  const { mutate: handleDeleteClass } = useMutation(
     async (cardObject: DeleteClass) => {
       const response = await deleteClass(cardObject);
       const data = await response.json();
@@ -32,7 +28,7 @@ const DeleteClassModal = ({
       },
 
       onSuccess: () => {
-        setSelectedClassWhenDeleteClass();
+        updateSelectedClassAfterDelete();
       },
     }
   );
