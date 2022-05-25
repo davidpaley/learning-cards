@@ -5,8 +5,9 @@ import { DeckResponse } from "../../src/types";
 const prisma = new PrismaClient();
 
 export interface ResponseData {
-  isNotLogged: boolean;
+  isNotLogged?: boolean;
   data?: DeckResponse | DeckResponse[];
+  message?: string;
 }
 
 export default async (
@@ -52,6 +53,15 @@ export default async (
       isNotLogged: false,
     });
     return;
+  } else if (req.method === "DELETE") {
+    const deck = JSON.parse(req.body);
+    const deleteDeck = await prisma.deck.delete({
+      where: {
+        id: deck.id,
+      },
+    });
+    res.status(200).json({ data: deleteDeck, isNotLogged: false });
+    return;
   }
-  return res.status(405).json({ message: "Method not allowed" } as any);
+  return res.status(405).json({ message: "Method not allowed" });
 };

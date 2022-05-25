@@ -12,7 +12,6 @@ import {
   Space,
 } from "antd";
 import {
-  DeleteOutlined,
   EditOutlined,
   PlayCircleOutlined,
   PlusCircleOutlined,
@@ -33,6 +32,7 @@ import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import { CustomClass } from "../src/types";
 import DeleteClassModal from "../src/home/DeleteClassModal";
+import DeleteDeckModal from "../src/home/DeleteDeckModal";
 
 const { Title } = Typography;
 
@@ -169,6 +169,12 @@ const Home: NextPage = () => {
                           size="large"
                           align="center"
                         >
+                          <DeleteDeckModal
+                            selectedDeck={deck}
+                            updateSelectedDeckAfterDelete={
+                              updateSelectedClassAfterDelete
+                            }
+                          />
                           <Link href={`/play/${deck.id}`}>
                             <PlayCircleOutlined
                               style={{

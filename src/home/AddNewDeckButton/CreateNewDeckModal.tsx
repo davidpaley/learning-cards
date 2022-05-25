@@ -67,7 +67,7 @@ const CreateNewDeckModal: FC<CreateNewDeckModalProps> = (modalProps) => {
             onClick={() => form.submit()}
             type="primary"
           >
-            Create Class
+            Create Deck
           </Button>
         </Space>
       }

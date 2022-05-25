@@ -6,6 +6,12 @@ type CreateDeck = {
   isUpdate?: boolean;
 };
 
+export type DeleteDeck = {
+  id: string;
+  classId: string;
+  name: string;
+};
+
 const URL = "/api/decks";
 
 export const createOrUpdateDeck = (body: CreateDeck) => {
@@ -28,3 +34,9 @@ export const getDeck = async (
   const deck = await response.json();
   return deck;
 };
+
+export const deleteDeck = (body: DeleteDeck) =>
+  fetch(URL, {
+    method: "DELETE",
+    body: JSON.stringify(body),
+  });
