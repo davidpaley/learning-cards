@@ -16,8 +16,10 @@ import DeleteDeckModal from "../DeleteDeckModal";
 import styles from "./HomePage.module.css";
 import { CustomClass } from "../../types";
 
+export const CREATE_YOUR_FIRST_CLASS_LABEL = "Create your first Class!";
+
 interface HomePageArgs {
-  selectedClass: CustomClass;
+  selectedClass?: CustomClass;
   changeSelectedClass: (newClassSelected: CustomClass) => void;
   updateSelectedClassAfterDelete: () => void;
   classes: CustomClass[];
@@ -59,12 +61,6 @@ const HomePage = ({
                 key={deck.id}
                 extra={
                   <Space direction="horizontal" size="large" align="center">
-                    <DeleteDeckModal
-                      selectedDeck={deck}
-                      updateSelectedDeckAfterDelete={
-                        updateSelectedClassAfterDelete
-                      }
-                    />
                     <Link href={`/play/${deck.id}`}>
                       <PlayCircleOutlined
                         style={{
@@ -83,6 +79,12 @@ const HomePage = ({
                         }}
                       />
                     </Link>
+                    <DeleteDeckModal
+                      selectedDeck={deck}
+                      updateSelectedDeckAfterDelete={
+                        updateSelectedClassAfterDelete
+                      }
+                    />
                   </Space>
                 }
               >
@@ -110,7 +112,7 @@ const HomePage = ({
           onClick={() => setIsCreateClassModalVisible(true)}
           style={{ width: "100%", height: "90px", fontSize: "1.5rem" }}
         >
-          Create your first Class!
+          {CREATE_YOUR_FIRST_CLASS_LABEL}
         </Button>
       ) : (
         <AddNewDeckButton classId={selectedClass?.id} />

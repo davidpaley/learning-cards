@@ -5,6 +5,8 @@ import { useState } from "react";
 import CreateNewDeckModal from "./CreateNewDeckModal";
 import styles from "./AddNewDeckButton.module.css";
 
+export const NEW_DECK_LABEL = "New Deck";
+
 const AddNewDeckButton = ({ classId }: { classId: string }) => {
   const [showModal, setShowModal] = useState(false);
   const handleShowModal = () => setShowModal((prevState) => !prevState);
@@ -16,7 +18,7 @@ const AddNewDeckButton = ({ classId }: { classId: string }) => {
         icon={<PlusOutlined className={styles.icon} />}
         onClick={() => setShowModal(true)}
       >
-        New Deck
+        {NEW_DECK_LABEL}
       </Button>
       <CreateNewDeckModal
         classId={classId}
