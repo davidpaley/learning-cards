@@ -1,0 +1,15 @@
+.createNewClass {
+  color: white;
+  display: flex;
+  justify-content: space-around;
+  align-items: baseline;
+}
+
+.createNewClassIcon {
+  color: white !important;
+}
+
+.createClassTitle {
+  color: white !important;
+  margin-left: 1rem;
+}

@@ -123,19 +123,3 @@
 .classDeckListTitle {
   font-size: 1.5rem;
 }
-
-.createNewClass {
-  color: white;
-  display: flex;
-  justify-content: space-around;
-  align-items: baseline;
-}
-
-.createClassTitle {
-  color: white !important;
-  margin-left: 1rem;
-}
-
-.createNewClassIcon {
-  color: white !important;
-}

@@ -1,0 +1,128 @@
+import React from "react";
+
+import Link from "next/link";
+import { Breadcrumb, Button, Row, List, Divider, Space } from "antd";
+import {
+  EditOutlined,
+  PlayCircleOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
+import { Typography } from "antd";
+import CreateClassModal from "../CreateClassModal";
+
+import AddNewDeckButton from "../AddNewDeckButton";
+import DeleteClassModal from "../DeleteClassModal";
+import DeleteDeckModal from "../DeleteDeckModal";
+import styles from "./HomePage.module.css";
+import { CustomClass } from "../../types";
+
+interface HomePageArgs {
+  selectedClass: CustomClass;
+  changeSelectedClass: (newClassSelected: CustomClass) => void;
+  updateSelectedClassAfterDelete: () => void;
+  classes: CustomClass[];
+  isCreateClassModalVisible: boolean;
+  setIsCreateClassModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const HomePage = ({
+  selectedClass,
+  changeSelectedClass,
+  updateSelectedClassAfterDelete,
+  classes,
+  isCreateClassModalVisible,
+  setIsCreateClassModalVisible,
+}: HomePageArgs) => {
+  return (
+    <>
+      <Row align="middle" justify="space-between">
+        <Breadcrumb>
+          <Breadcrumb.Item>{`${
+            selectedClass?.name || ""
+          } decks`}</Breadcrumb.Item>
+        </Breadcrumb>
+        <DeleteClassModal
+          selectedClass={selectedClass}
+          updateSelectedClassAfterDelete={updateSelectedClassAfterDelete}
+        />
+      </Row>
+
+      <Divider />
+      {!!selectedClass?.decks?.length && (
+        <List
+          itemLayout="vertical"
+          size="large"
+          dataSource={selectedClass.decks}
+          renderItem={(deck) => (
+            <>
+              <List.Item
+                key={deck.id}
+                extra={
+                  <Space direction="horizontal" size="large" align="center">
+                    <DeleteDeckModal
+                      selectedDeck={deck}
+                      updateSelectedDeckAfterDelete={
+                        updateSelectedClassAfterDelete
+                      }
+                    />
+                    <Link href={`/play/${deck.id}`}>
+                      <PlayCircleOutlined
+                        style={{
+                          fontSize: "30px",
+                          color: "#08c",
+                          cursor: "pointer",
+                        }}
+                      />
+                    </Link>
+                    <Link href={`/edit/decks/${deck.id}`}>
+                      <EditOutlined
+                        style={{
+                          fontSize: "30px",
+                          color: "rgba(124, 130, 142, 0.6)",
+                          cursor: "pointer",
+                        }}
+                      />
+                    </Link>
+                  </Space>
+                }
+              >
+                <List.Item.Meta
+                  title={
+                    <Typography.Link
+                      href={`/play/${deck.id}`}
+                      style={{ fontSize: "1.5rem" }}
+                    >
+                      {deck.name}
+                    </Typography.Link>
+                  }
+                />
+              </List.Item>
+              <Divider />
+            </>
+          )}
+        />
+      )}
+
+      {!classes?.length ? (
+        <Button
+          type="primary"
+          icon={<PlusOutlined className={styles.createNewClassIcon} />}
+          onClick={() => setIsCreateClassModalVisible(true)}
+          style={{ width: "100%", height: "90px", fontSize: "1.5rem" }}
+        >
+          Create your first Class!
+        </Button>
+      ) : (
+        <AddNewDeckButton classId={selectedClass?.id} />
+      )}
+
+      <CreateClassModal
+        onSuccess={changeSelectedClass}
+        close={() => setIsCreateClassModalVisible(false)}
+        visible={isCreateClassModalVisible}
+      />
+    </>
+  );
+};
+
+export default HomePage;
