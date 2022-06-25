@@ -1,8 +1,8 @@
 import Head from "next/head";
 import { Layout, Menu, Button, Dropdown } from "antd";
-import { LoginOutlined, LogoutOutlined, MenuOutlined } from "@ant-design/icons";
+import { LoginOutlined, LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { signIn, signOut } from "next-auth/react";
-import style from "./Header.module.css";
+import styles from "./Header.module.css";
 
 const { Header: AntdHeader } = Layout;
 
@@ -39,10 +39,10 @@ const Header = ({
         <meta name="description" content={pageDescription} />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <AntdHeader className={style.customHeader}>
+      <AntdHeader className={styles.customHeader}>
         <Dropdown overlay={menu} placement="bottomRight">
-          <Button className={style.menuLink} type="text">
-            <MenuOutlined />
+          <Button className={styles.menuLink} type="text">
+            <UserOutlined className={styles.loginIcon} />
           </Button>
         </Dropdown>
       </AntdHeader>
