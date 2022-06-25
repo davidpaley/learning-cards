@@ -3,7 +3,6 @@ import type { NextPage } from "next";
 import { Layout } from "antd";
 import { PrismaClient } from "@prisma/client";
 import { dehydrate, QueryClient, useQuery } from "react-query";
-import styles from "../styles/Home.module.css";
 import { getClasses } from "../src/api/classes";
 import Header from "../src/commonComponents/header";
 import { CLASSES_QUERY } from "../src/constants";
@@ -14,6 +13,8 @@ import { useSession } from "next-auth/react";
 import { CustomClass } from "../src/types";
 import HomePage from "../src/home/HomePage";
 import CustomSider from "../src/home/Sider";
+
+import styles from "../styles/Home.module.css";
 
 const { Content, Footer } = Layout;
 const prisma = new PrismaClient();
@@ -103,9 +104,7 @@ const Home: NextPage = () => {
           />
         </Content>
       </Layout>
-      <Footer style={{ textAlign: "center" }}>
-        ©2022 Created by David Paley
-      </Footer>
+      <Footer className={styles.footer}>©2022 Created by David Paley</Footer>
     </Layout>
   );
 };
