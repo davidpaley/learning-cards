@@ -1,34 +1,93 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# About this project
+
+The objective of this project is to use spaced repetition to remember things. 
+
+You create `Decks` and every deck has `Cards`. The cards can be in different "levels", from 1 to 5. Cards in different levels, has different frecuencies to show up in the application. Cards in level:
+1. are shown every day
+2. are shown every 3 days
+3. are shown every 7 days
+4. are shown every 15 days
+5. are shown every 30 days
+
+This is the [file](./src/constants.ts) where it is configured.
+
+All cards start in level 1. Every time you reply a card ok, it will go to the next level (you will answer it less frecuently). If you reply wrong, it will go to level 1 again. 
+
+### Learn more about Spaced repetition
+You can learn about space repetition [here](https://ncase.me/remember/) and [here](https://en.wikipedia.org/wiki/Spaced_repetition#:~:text=Spaced%20repetition%20is%20a%20method,fact%20is%20presented%20or%20said.).
+
+
+## Deployment
+
+This project is deployed [here](https://learning-cards.vercel.app/) 
+
+## Technologies used
+
+Technologies used for this project
+- This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+- The ORM used is [Prisma](https://www.prisma.io/)
+- [Vercel](https://vercel.com/) for the deployment
+- [Ant Design](https://ant.design/) as the react component library.
+- Typescript, obviously.
+- CSS Modules
 
 ## Getting Started
 
-First, run the development server:
+# Getting started
+
+## Clone the project and install dependencies
+
+- Clone this repository:
+
+`git clone git@github.com:danimontanaro/nowports-phone-book-app.git`
+
+- Install dependencies:
 
 ```bash
-npm run dev
+yarn
 # or
+npm i
+```
+
+## Create .env file
+
+- Create `.env` file file in the root of the project with the following variables:
+
+```
+DB_URL=file:./dev.db # if you are going to use sqlite
+NEXT_PUBLIC_HOST=http://localhost:3000
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=
+NEXTAUTH_SECRET=
+NEXTAUTH_URL=
+```
+
+- For `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` follow this instructions:
+
+1. Go to your GitHub settings. Select Applications > Developer applications tab.
+2. Pick an existing application or hit Register new application.
+3. Set a few parameters for your application and get the Client ID and Client Secret.
+4. After that, with the Client ID and Client secret you can set these variables.
+
+## Set up the database
+
+- Change provider variable in [schema.prisma](./prisma/schema.prisma) file
+  `provider = "sqlite"`
+
+- Run the following command to create your database file.
+
+```bash
+npx prisma migrate dev`
+```
+
+## Start the project in localhost
+
+- Start the REST API server running
+
+```bash
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+The server is now running on http://localhost:3000.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
