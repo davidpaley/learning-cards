@@ -85,6 +85,8 @@ npx prisma migrate dev`
 
 ```bash
 yarn dev
+# or
+npm run dev
 ```
 
 
