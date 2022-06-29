@@ -19,7 +19,7 @@ You can learn about space repetition [here](https://ncase.me/remember/) and [her
 
 ## Deployment
 
-This project is deployed [here](https://learning-cards.vercel.app/) 
+This project is deployed [here](https://learning-cards.vercel.app/) with Vercel and Heroku for the database.
 
 ## Technologies used
 
@@ -27,6 +27,7 @@ Technologies used for this project
 - This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 - The ORM used is [Prisma](https://www.prisma.io/)
 - [Vercel](https://vercel.com/) for the deployment
+- [Heroku](https://www.heroku.com/) for the database
 - [Ant Design](https://ant.design/) as the react component library.
 - Typescript, obviously.
 - CSS Modules
