@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import { PrismaClient, Card as CardType } from "@prisma/client";
 import { useMutation, useQueryClient } from "react-query";
 import styles from "../../styles/PlayDeck.module.css";
-import { levelsValues, CARD_QUERY } from "../../src/constants";
+import { cardLevels, CARD_QUERY } from "../../src/constants";
 import { CreateOrUpdateCard, createOrUpdateCard } from "../../src/api/cards";
 import Header from "../../src/commonComponents/header";
 import {
@@ -102,8 +102,8 @@ const PlayPage: NextPage<{ cardsToPlay: CardType[]; deckName: string }> = ({
     let newLevel = cardsToPlay[currentCardIndex].level;
     if (theAnswerWasGood) {
       newLevel = cardsToPlay[currentCardIndex].level + 1;
-      daysForLevel = levelsValues[newLevel];
-      if (newLevel >= Object.keys(levelsValues).length) {
+      daysForLevel = cardLevels[newLevel];
+      if (newLevel >= Object.keys(cardLevels).length) {
         handleUpdateCard({
           level: newLevel,
           isDone: true,
@@ -112,7 +112,7 @@ const PlayPage: NextPage<{ cardsToPlay: CardType[]; deckName: string }> = ({
         return;
       }
     } else {
-      daysForLevel = levelsValues[1];
+      daysForLevel = cardLevels[1];
       newLevel = 1;
     }
     const newNextReviewDate = new Date();
