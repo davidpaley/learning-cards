@@ -31,8 +31,6 @@ Technologies used for this project
 - Typescript, obviously.
 - CSS Modules
 
-## Getting Started
-
 # Getting started
 
 ## Clone the project and install dependencies
@@ -58,8 +56,8 @@ DB_URL=file:./dev.db # if you are going to use sqlite
 NEXT_PUBLIC_HOST=http://localhost:3000
 GITHUB_CLIENT_ID=
 GITHUB_CLIENT_SECRET=
-NEXTAUTH_SECRET=
-NEXTAUTH_URL=
+NEXTAUTH_SECRET= # for local testing set any number here
+NEXTAUTH_URL=http://localhost:3000
 ```
 
 - For `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` follow this instructions:
