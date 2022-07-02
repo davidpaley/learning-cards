@@ -28,11 +28,17 @@ const RootPage: NextPage = () => {
           <h2>Start creating cards and learn more</h2>
           <br />
         </div>
-        <div>
+        <Space>
+          <Button
+            href="https://github.com/davidpaley/learning-cards"
+            target="_blank"
+          >
+            Learn about this project
+          </Button>
           <Link href="/home">
-            <Button>START NOW</Button>
+            <Button type="primary">START NOW</Button>
           </Link>
-        </div>
+        </Space>
       </Content>
     </CustomLayout>
   );
