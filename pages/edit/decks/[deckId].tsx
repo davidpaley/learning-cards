@@ -21,6 +21,7 @@ import DeleteCardModal from "../../../src/editDeck/deleteCards";
 import { getSession } from "next-auth/react";
 import { HomeOutlined } from "@ant-design/icons";
 import { CardForm } from "../../../src/types";
+import Link from "next/link";
 
 const { Content, Footer } = Layout;
 const prisma = new PrismaClient();
@@ -137,8 +138,10 @@ const Home: NextPage<HomeProp> = ({ deckId }: HomeProp) => {
         <Content className={styles.editDeckContent}>
           <Row align="middle" justify="space-between">
             <Breadcrumb className={styles.breadcrumb}>
-              <Breadcrumb.Item href="/home">
-                <HomeOutlined />
+              <Breadcrumb.Item>
+                <Link href="/home">
+                  <HomeOutlined />
+                </Link>
               </Breadcrumb.Item>
               <Breadcrumb.Item href="">{deckForCards?.name}</Breadcrumb.Item>
               <Breadcrumb.Item>{"Edit Deck"}</Breadcrumb.Item>

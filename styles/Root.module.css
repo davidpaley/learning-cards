@@ -59,3 +59,8 @@
   align-items: center;
   flex-grow: 1;
 }
+
+.highlightedTitle {
+  color: #0070f3;
+  text-decoration: none;
+}

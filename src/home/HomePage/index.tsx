@@ -90,11 +90,8 @@ const HomePage = ({
               >
                 <List.Item.Meta
                   title={
-                    <Typography.Link
-                      href={`/play/${deck.id}`}
-                      style={{ fontSize: "1.5rem" }}
-                    >
-                      {deck.name}
+                    <Typography.Link style={{ fontSize: "1.5rem" }}>
+                      <Link href={`/play/${deck.id}`}>{deck.name}</Link>
                     </Typography.Link>
                   }
                 />

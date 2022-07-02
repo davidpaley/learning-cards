@@ -18,6 +18,7 @@ import {
 } from "antd";
 import { getSession } from "next-auth/react";
 import { HomeOutlined } from "@ant-design/icons";
+import Link from "next/link";
 const { Title, Text } = Typography;
 
 const prisma = new PrismaClient();
@@ -133,8 +134,10 @@ const PlayPage: NextPage<{ cardsToPlay: CardType[]; deckName: string }> = ({
       <Header />
       <div className={styles.siteCardBorderLessWrapper}>
         <Breadcrumb className={styles.breadcrumb}>
-          <Breadcrumb.Item href="/home">
-            <HomeOutlined />
+          <Breadcrumb.Item>
+            <Link href="/home">
+              <HomeOutlined />
+            </Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item href="">{deckName}</Breadcrumb.Item>
           <Breadcrumb.Item>{"Play Deck Cards"}</Breadcrumb.Item>
@@ -207,8 +210,6 @@ const PlayPage: NextPage<{ cardsToPlay: CardType[]; deckName: string }> = ({
         ) : (
           <Row align="middle" justify="center">
             <Card
-              // title={"No cards for today"}
-              //extra={<a href="#">More</a>}
               // TODO: Review styles of this card
               style={{ width: 900, height: 600, backgroundColor: "white" }}
               cover={

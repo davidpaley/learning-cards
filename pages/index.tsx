@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import { Button, Layout, Menu } from "antd";
+import { Button, Layout, Menu, Row, Space } from "antd";
 import styles from "../styles/Root.module.css";
 import Link from "next/link";
 
@@ -25,7 +25,9 @@ const Home: NextPage = () => {
       <Layout hasSider>
         <Content className={styles.main}>
           <h1 className={styles.title}>
-            Your <a href="https://nextjs.org">Cards</a>
+            <Space>
+              {`Your`} <div className={styles.highlightedTitle}>Cards</div>
+            </Space>
           </h1>
 
           <div className={styles.grid}>
