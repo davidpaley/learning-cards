@@ -6,7 +6,7 @@ import styles from "./Header.module.css";
 
 const { Header: AntdHeader } = Layout;
 
-interface HeaderProps {
+export interface HeaderProps {
   isLogged?: boolean;
   pageTitle?: string;
   pageDescription?: string;

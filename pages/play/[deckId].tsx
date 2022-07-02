@@ -5,20 +5,11 @@ import { useMutation, useQueryClient } from "react-query";
 import styles from "../../styles/PlayDeck.module.css";
 import { cardLevels, CARD_QUERY } from "../../src/constants";
 import { CreateOrUpdateCard, createOrUpdateCard } from "../../src/api/cards";
-import Header from "../../src/commonComponents/header";
-import {
-  Layout,
-  Button,
-  Row,
-  Card,
-  Typography,
-  Col,
-  Divider,
-  Breadcrumb,
-} from "antd";
+import { Button, Row, Card, Typography, Col, Divider, Breadcrumb } from "antd";
 import { getSession } from "next-auth/react";
 import { HomeOutlined } from "@ant-design/icons";
 import Link from "next/link";
+import CustomLayout from "../../src/commonComponents/layout";
 const { Title, Text } = Typography;
 
 const prisma = new PrismaClient();
@@ -130,8 +121,13 @@ const PlayPage: NextPage<{ cardsToPlay: CardType[]; deckName: string }> = ({
     goToNextCard();
   };
   return (
-    <Layout>
-      <Header />
+    <CustomLayout
+      headerProps={{
+        isLogged: true,
+        pageTitle: "Play with your Cards!",
+        pageDescription: "Learn with space repetition!",
+      }}
+    >
       <div className={styles.siteCardBorderLessWrapper}>
         <Breadcrumb className={styles.breadcrumb}>
           <Breadcrumb.Item>
@@ -229,7 +225,7 @@ const PlayPage: NextPage<{ cardsToPlay: CardType[]; deckName: string }> = ({
         )}
       </div>
       );
-    </Layout>
+    </CustomLayout>
   );
 };
 

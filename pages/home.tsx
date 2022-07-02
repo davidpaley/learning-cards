@@ -4,7 +4,6 @@ import { Layout } from "antd";
 import { PrismaClient } from "@prisma/client";
 import { dehydrate, QueryClient, useQuery } from "react-query";
 import { getClasses } from "../src/api/classes";
-import Header from "../src/commonComponents/header";
 import { CLASSES_QUERY } from "../src/constants";
 import React from "react";
 import { getSession } from "next-auth/react";
@@ -15,8 +14,9 @@ import HomePage from "../src/home/HomePage";
 import CustomSider from "../src/home/Sider";
 
 import styles from "../styles/Home.module.css";
+import CustomLayout from "../src/commonComponents/layout";
 
-const { Content, Footer } = Layout;
+const { Content } = Layout;
 const prisma = new PrismaClient();
 
 export async function getServerSideProps(context) {
@@ -84,28 +84,30 @@ const Home: NextPage = () => {
     useState(false);
 
   return (
-    <Layout>
-      <Header />
-      <Layout>
-        <CustomSider
+    <CustomLayout
+      headerProps={{
+        isLogged: !!sessionData,
+        pageTitle: "Your Cards!",
+        pageDescription: "Learn with space repetition!",
+      }}
+    >
+      <CustomSider
+        selectedClass={selectedClass}
+        classes={classes}
+        changeSelectedClass={changeSelectedClass}
+        setIsCreateClassModalVisible={setIsCreateClassModalVisible}
+      />
+      <Content className={styles.classContent}>
+        <HomePage
           selectedClass={selectedClass}
-          classes={classes}
           changeSelectedClass={changeSelectedClass}
+          updateSelectedClassAfterDelete={updateSelectedClassAfterDelete}
+          classes={classes}
+          isCreateClassModalVisible={isCreateClassModalVisible}
           setIsCreateClassModalVisible={setIsCreateClassModalVisible}
         />
-        <Content className={styles.classContent}>
-          <HomePage
-            selectedClass={selectedClass}
-            changeSelectedClass={changeSelectedClass}
-            updateSelectedClassAfterDelete={updateSelectedClassAfterDelete}
-            classes={classes}
-            isCreateClassModalVisible={isCreateClassModalVisible}
-            setIsCreateClassModalVisible={setIsCreateClassModalVisible}
-          />
-        </Content>
-      </Layout>
-      <Footer className={styles.footer}>©2022 Created by David Paley</Footer>
-    </Layout>
+      </Content>
+    </CustomLayout>
   );
 };
 

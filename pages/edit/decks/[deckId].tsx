@@ -11,7 +11,6 @@ import {
 } from "react-query";
 import { getDeck } from "../../../src/api/decks";
 import { CARD_QUERY } from "../../../src/constants";
-import Header from "../../../src/commonComponents/header";
 import { Layout, Breadcrumb, Row, Form } from "antd";
 
 import { CreateOrUpdateCard, createOrUpdateCard } from "../../../src/api/cards";
@@ -22,8 +21,9 @@ import { getSession } from "next-auth/react";
 import { HomeOutlined } from "@ant-design/icons";
 import { CardForm } from "../../../src/types";
 import Link from "next/link";
+import CustomLayout from "../../../src/commonComponents/layout";
 
-const { Content, Footer } = Layout;
+const { Content } = Layout;
 const prisma = new PrismaClient();
 
 export async function getServerSideProps(context) {
@@ -64,14 +64,6 @@ export async function getServerSideProps(context) {
 }
 
 export type HomeProp = {
-  // deck: {
-  //   id: string;
-  //   classId: string;
-  //   name: string;
-  //   creationDate: Date;
-  //   cards: Card[];
-  //   classOfDeck: ClassForDecks;
-  // };
   deckId: string;
 };
 
@@ -126,42 +118,42 @@ const Home: NextPage<HomeProp> = ({ deckId }: HomeProp) => {
   };
 
   return (
-    <Layout>
-      <Header />
-      <Layout>
-        <SidebarCards
-          selectedCard={selectedCard}
-          cardSelected={cardSelected}
-          deckForCards={deckForCards}
-          handleCreateOrUpdateCard={handleCreateOrUpdateCard}
-        />
-        <Content className={styles.editDeckContent}>
-          <Row align="middle" justify="space-between">
-            <Breadcrumb className={styles.breadcrumb}>
-              <Breadcrumb.Item>
-                <Link href="/home">
-                  <HomeOutlined />
-                </Link>
-              </Breadcrumb.Item>
-              <Breadcrumb.Item href="">{deckForCards?.name}</Breadcrumb.Item>
-              <Breadcrumb.Item>{"Edit Deck"}</Breadcrumb.Item>
-            </Breadcrumb>
-            <DeleteCardModal
-              selectedCard={selectedCard}
-              setSelectedCardWhenDeleteCard={setSelectedCardWhenDeleteCard}
-            />
-          </Row>
-          <FormCardsEdit
-            handleFormSubmit={handleFormSubmit}
+    <CustomLayout
+      headerProps={{
+        isLogged: true,
+        pageTitle: "Edit Cards!",
+        pageDescription: "Learn with space repetition!",
+      }}
+    >
+      <SidebarCards
+        selectedCard={selectedCard}
+        cardSelected={cardSelected}
+        deckForCards={deckForCards}
+        handleCreateOrUpdateCard={handleCreateOrUpdateCard}
+      />
+      <Content className={styles.editDeckContent}>
+        <Row align="middle" justify="space-between">
+          <Breadcrumb className={styles.breadcrumb}>
+            <Breadcrumb.Item>
+              <Link href="/home">
+                <HomeOutlined />
+              </Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item href="">{deckForCards?.name}</Breadcrumb.Item>
+            <Breadcrumb.Item>{"Edit Deck"}</Breadcrumb.Item>
+          </Breadcrumb>
+          <DeleteCardModal
             selectedCard={selectedCard}
-            form={form}
+            setSelectedCardWhenDeleteCard={setSelectedCardWhenDeleteCard}
           />
-        </Content>
-      </Layout>
-      <Footer style={{ textAlign: "center" }}>
-        Ant Design ©2018 Created by Ant UED
-      </Footer>
-    </Layout>
+        </Row>
+        <FormCardsEdit
+          handleFormSubmit={handleFormSubmit}
+          selectedCard={selectedCard}
+          form={form}
+        />
+      </Content>
+    </CustomLayout>
   );
 };
 

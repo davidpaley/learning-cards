@@ -1,0 +1,8 @@
+.root {
+  height: 85vh;
+  padding: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}

@@ -2,9 +2,10 @@ import React, { useEffect } from "react";
 import type { NextPage } from "next";
 import { useSession, signIn, signOut, getSession } from "next-auth/react";
 import Router from "next/router";
-import { Layout, Button } from "antd";
-import Header from "../src/commonComponents/header";
+import { Button, Image, Space } from "antd";
 import { PrismaClient } from "@prisma/client";
+import CustomLayout from "../src/commonComponents/layout";
+import styles from "../styles/Login.module.css";
 
 const prisma = new PrismaClient();
 
@@ -49,13 +50,25 @@ const LoginPage: NextPage = () => {
     );
   }
   return (
-    <Layout>
-      <Header isLogged={false} />
-      <>
-        Not signed in <br />
-        <Button onClick={() => signIn()}>Sign in</Button>
-      </>
-    </Layout>
+    <CustomLayout
+      headerProps={{
+        isLogged: false,
+        pageTitle: "Login",
+        pageDescription: "Learn with space repetition!",
+      }}
+    >
+      <Space className={styles.root} direction="vertical">
+        <Image
+          width={200}
+          preview={false}
+          src="https://madrerusia.com/wp-content/uploads/2017/10/920x312-Contacts-1.jpg"
+        />
+
+        <Button type="primary" onClick={() => signIn()}>
+          Sign in
+        </Button>
+      </Space>
+    </CustomLayout>
   );
 };
 
