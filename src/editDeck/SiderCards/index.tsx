@@ -1,6 +1,6 @@
 import React from "react";
-import styles from "../../styles/EditDecks.module.css";
 import { Layout, Menu, Card, Button } from "antd";
+import styles from "./SiderCards.module.css";
 
 const { Sider } = Layout;
 
@@ -22,8 +22,9 @@ const SidebarCards = ({
     };
     handleCreateOrUpdateCard(newCard);
   };
+
   return (
-    <Sider>
+    <Sider className={styles.siderContainer}>
       <Menu
         theme="dark"
         selectedKeys={[selectedCard?.id]}

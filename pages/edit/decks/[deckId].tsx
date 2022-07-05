@@ -14,7 +14,7 @@ import { CARD_QUERY } from "../../../src/constants";
 import { Layout, Breadcrumb, Row, Form } from "antd";
 
 import { CreateOrUpdateCard, createOrUpdateCard } from "../../../src/api/cards";
-import SidebarCards from "../../../src/editDeck/siderCards";
+import SidebarCards from "../../../src/editDeck/SiderCards";
 import FormCardsEdit from "../../../src/editDeck/formCards";
 import DeleteCardModal from "../../../src/editDeck/deleteCards";
 import { getSession } from "next-auth/react";

@@ -21,7 +21,7 @@ const CustomSider = ({
   setIsCreateClassModalVisible,
 }: CustomSiderArgs) => {
   return (
-    <Sider>
+    <Sider className={styles.siderContainer}>
       <Menu
         theme="dark"
         selectedKeys={[selectedClass?.id || "0"]}

@@ -1,3 +1,15 @@
 .footer {
   text-align: center;
 }
+
+.layoutContainer {
+  display: flex;
+  min-height: 100vh;
+  overflow: auto;
+}
+
+.componentContainer {
+  flex: 1;
+  display: flex;
+  overflow: auto;
+}

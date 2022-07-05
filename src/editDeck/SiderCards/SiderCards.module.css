@@ -1,0 +1,30 @@
+.sideButtonContainer {
+  display: flex;
+  justify-content: center;
+  padding-top: 1.25rem;
+}
+
+.createNewCardButton {
+  color: white;
+}
+
+.createNewCardButton:hover {
+  color: #e6f7ff;
+}
+
+.cards {
+  display: flex;
+  margin: 10px;
+  flex-direction: column;
+  color: inherit;
+  text-decoration: none;
+  border: 1px solid #eaeaea;
+  border-radius: 10px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+@media only screen and (max-width: 600px) {
+  .siderContainer {
+    display: none;
+  }
+}

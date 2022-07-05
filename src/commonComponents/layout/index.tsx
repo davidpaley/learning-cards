@@ -11,9 +11,9 @@ interface CustomLayoutProps {
 
 const CustomLayout = ({ headerProps, children }: CustomLayoutProps) => {
   return (
-    <Layout>
+    <Layout className={styles.layoutContainer}>
       <Header {...headerProps} />
-      <Layout>{children}</Layout>
+      <Layout className={styles.componentContainer}>{children}</Layout>
       <Footer className={styles.footer}>©2022 Created by David Paley</Footer>
     </Layout>
   );
