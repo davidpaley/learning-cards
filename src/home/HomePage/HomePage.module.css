@@ -1,3 +1,18 @@
 .createNewClassIcon {
   color: white !important;
 }
+
+.firstClassButton {
+  width: 100%;
+  height: 90px;
+  font-size: 1.5rem;
+}
+
+@media only screen and (max-width: 600px) {
+  .listElementContainer {
+    text-align: center;
+  }
+  .firstClassButton {
+    text-align: center;
+  }
+}

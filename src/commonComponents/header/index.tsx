@@ -1,8 +1,10 @@
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { Layout, Menu, Button, Dropdown } from "antd";
 import { LoginOutlined, LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { signIn, signOut } from "next-auth/react";
 import styles from "./Header.module.css";
+import MobileHomerMenu from "./MobileHomeMenu";
 
 const { Header: AntdHeader } = Layout;
 
@@ -17,6 +19,7 @@ const Header = ({
   pageTitle = "Learning Cards!",
   pageDescription = "Learn with space repetition!",
 }: HeaderProps) => {
+  const { pathname } = useRouter();
   const menu = (
     <Menu>
       <Menu.Item>
@@ -40,6 +43,7 @@ const Header = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <AntdHeader className={styles.customHeader}>
+        {pathname.includes("home") && <MobileHomerMenu />}
         <Dropdown overlay={menu} placement="bottomRight">
           <Button className={styles.menuLink} type="text">
             <UserOutlined className={styles.loginIcon} />

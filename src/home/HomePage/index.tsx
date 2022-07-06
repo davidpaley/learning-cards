@@ -59,6 +59,7 @@ const HomePage = ({
             <>
               <List.Item
                 key={deck.id}
+                className={styles.listElementContainer}
                 extra={
                   <Space direction="horizontal" size="large" align="center">
                     <Link href={`/play/${deck.id}`}>
