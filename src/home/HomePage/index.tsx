@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import Link from "next/link";
 import { Breadcrumb, Button, Row, List, Divider, Space } from "antd";
@@ -14,27 +14,25 @@ import AddNewDeckButton from "../AddNewDeckButton";
 import DeleteClassModal from "../DeleteClassModal";
 import DeleteDeckModal from "../DeleteDeckModal";
 import styles from "./HomePage.module.css";
-import { CustomClass } from "../../types";
+import { HomeContext } from "../HomeContextProvider";
 
 export const CREATE_YOUR_FIRST_CLASS_LABEL = "Create your first Class!";
 
 interface HomePageArgs {
-  selectedClass?: CustomClass;
-  changeSelectedClass: (newClassSelected: CustomClass) => void;
   updateSelectedClassAfterDelete: () => void;
-  classes: CustomClass[];
   isCreateClassModalVisible: boolean;
-  setIsCreateClassModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const HomePage = ({
-  selectedClass,
-  changeSelectedClass,
   updateSelectedClassAfterDelete,
-  classes,
   isCreateClassModalVisible,
-  setIsCreateClassModalVisible,
 }: HomePageArgs) => {
+  const {
+    selectedClass,
+    classes,
+    changeSelectedClass,
+    setIsCreateClassModalVisible,
+  } = useContext(HomeContext);
   return (
     <>
       <Row align="middle" justify="space-between">

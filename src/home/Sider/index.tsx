@@ -1,27 +1,21 @@
 import { PlusCircleOutlined } from "@ant-design/icons";
-import { Menu, Button, Divider, Layout, Typography } from "antd";
-import { CustomClass } from "../../types";
+import { Menu, Button, Divider, Typography } from "antd";
+import { useContext } from "react";
+import { HomeContext } from "../HomeContextProvider";
 
 import styles from "./Sider.module.css";
 
-const { Sider } = Layout;
 const { Title } = Typography;
 
-interface CustomSiderArgs {
-  selectedClass: CustomClass;
-  classes: CustomClass[];
-  changeSelectedClass: (newClassSelected: CustomClass) => void;
-  setIsCreateClassModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const CustomSider = ({
-  selectedClass,
-  classes,
-  changeSelectedClass,
-  setIsCreateClassModalVisible,
-}: CustomSiderArgs) => {
+const CustomSider = () => {
+  const {
+    selectedClass,
+    classes,
+    changeSelectedClass,
+    setIsCreateClassModalVisible,
+  } = useContext(HomeContext);
   return (
-    <Sider className={styles.siderContainer}>
+    <>
       <Menu
         theme="dark"
         selectedKeys={[selectedClass?.id || "0"]}
@@ -47,7 +41,7 @@ const CustomSider = ({
         </Title>
       </Button>
       <Divider style={{ border: "0.5px solid white" }} />
-    </Sider>
+    </>
   );
 };
 

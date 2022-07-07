@@ -12,11 +12,13 @@ import { useSession } from "next-auth/react";
 import { CustomClass } from "../src/types";
 import HomePage from "../src/home/HomePage";
 import CustomSider from "../src/home/Sider";
+import CustomLayout from "../src/commonComponents/layout";
+import HomeContextProvider from "../src/home/HomeContextProvider";
 
 import styles from "../styles/Home.module.css";
-import CustomLayout from "../src/commonComponents/layout";
 
-const { Content } = Layout;
+const { Content, Sider } = Layout;
+
 const prisma = new PrismaClient();
 
 export async function getServerSideProps(context) {
@@ -84,30 +86,32 @@ const Home: NextPage = () => {
     useState(false);
 
   return (
-    <CustomLayout
-      headerProps={{
-        isLogged: !!sessionData,
-        pageTitle: "Your Cards!",
-        pageDescription: "Learn with space repetition!",
+    <HomeContextProvider
+      value={{
+        selectedClass,
+        classes,
+        setIsCreateClassModalVisible,
+        changeSelectedClass,
       }}
     >
-      <CustomSider
-        selectedClass={selectedClass}
-        classes={classes}
-        changeSelectedClass={changeSelectedClass}
-        setIsCreateClassModalVisible={setIsCreateClassModalVisible}
-      />
-      <Content className={styles.classContent}>
-        <HomePage
-          selectedClass={selectedClass}
-          changeSelectedClass={changeSelectedClass}
-          updateSelectedClassAfterDelete={updateSelectedClassAfterDelete}
-          classes={classes}
-          isCreateClassModalVisible={isCreateClassModalVisible}
-          setIsCreateClassModalVisible={setIsCreateClassModalVisible}
-        />
-      </Content>
-    </CustomLayout>
+      <CustomLayout
+        headerProps={{
+          isLogged: !!sessionData,
+          pageTitle: "Your Cards!",
+          pageDescription: "Learn with space repetition!",
+        }}
+      >
+        <Sider className={styles.siderContainer}>
+          <CustomSider />
+        </Sider>
+        <Content className={styles.classContent}>
+          <HomePage
+            updateSelectedClassAfterDelete={updateSelectedClassAfterDelete}
+            isCreateClassModalVisible={isCreateClassModalVisible}
+          />
+        </Content>
+      </CustomLayout>
+    </HomeContextProvider>
   );
 };
 

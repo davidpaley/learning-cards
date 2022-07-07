@@ -10,11 +10,7 @@ import { deleteCard, DeleteCard } from "../../src/api/cards";
 const DeleteCardModal = ({ selectedCard, setSelectedCardWhenDeleteCard }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const queryClient = useQueryClient();
-  const {
-    isLoading,
-    error,
-    mutate: handleDeleteCard,
-  } = useMutation(
+  const { mutate: handleDeleteCard } = useMutation(
     async (cardObject: DeleteCard) => {
       const response = await deleteCard(cardObject);
       const data = await response.json();
