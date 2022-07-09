@@ -17,7 +17,7 @@ const DeleteDeckModal = ({ selectedDeck, updateSelectedDeckAfterDelete }) => {
     },
     {
       onError: (err) => {
-        console.log(err);
+        console.error(err);
       },
       // Always refetch after error or success:
       onSettled: () => {

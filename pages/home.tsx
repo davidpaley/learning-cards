@@ -11,7 +11,7 @@ import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import { CustomClass } from "../src/types";
 import HomePage from "../src/home/HomePage";
-import CustomSider from "../src/home/Sider";
+import HomeMenu from "../src/home/HomeMenu";
 import CustomLayout from "../src/commonComponents/layout";
 import HomeContextProvider from "../src/home/HomeContextProvider";
 
@@ -102,7 +102,7 @@ const Home: NextPage = () => {
         }}
       >
         <Sider className={styles.siderContainer}>
-          <CustomSider />
+          <HomeMenu />
         </Sider>
         <Content className={styles.classContent}>
           <HomePage

@@ -1,6 +1,7 @@
 import { MenuOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
 import { useState } from "react";
+import HomeMenu from "../../../home/HomeMenu";
 import styles from "./MobileHomeMenu.module.css";
 
 const MobileHomerMenu = () => {
@@ -14,8 +15,12 @@ const MobileHomerMenu = () => {
       >
         <MenuOutlined />
       </Button>
-      <Modal visible={isModalVisible} onCancel={() => setIsModalVisible(false)}>
-        <p>Are you want to delete this card?</p>
+      <Modal
+        visible={isModalVisible}
+        onCancel={() => setIsModalVisible(false)}
+        footer={null}
+      >
+        <HomeMenu setIsModalVisible={setIsModalVisible} isMobile />
       </Modal>
     </>
   );

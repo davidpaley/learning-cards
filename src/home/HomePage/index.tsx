@@ -39,7 +39,7 @@ const HomePage = ({
         <Breadcrumb>
           <Breadcrumb.Item>{`${
             selectedClass?.name || ""
-          } decks`}</Breadcrumb.Item>
+          } class`}</Breadcrumb.Item>
         </Breadcrumb>
         <DeleteClassModal
           selectedClass={selectedClass}

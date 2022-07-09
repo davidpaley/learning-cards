@@ -86,7 +86,7 @@ const Home: NextPage<HomeProp> = ({ deckId }: HomeProp) => {
     },
     {
       onError: (err) => {
-        console.log(err);
+        console.error(err);
       },
       onSettled: () => {
         queryClient.invalidateQueries([CARD_QUERY]);

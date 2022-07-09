@@ -29,12 +29,11 @@ const CreateNewDeckModal: FC<CreateNewDeckModalProps> = (modalProps) => {
         classId,
       });
       const data = await response.json();
-      console.log({ data });
       return data;
     },
     {
       onError: (err) => {
-        console.log(err);
+        console.error(err);
       },
       // Always refetch after error or success:
       onSettled: () => {

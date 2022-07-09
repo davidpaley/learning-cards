@@ -18,7 +18,7 @@ const DeleteCardModal = ({ selectedCard, setSelectedCardWhenDeleteCard }) => {
     },
     {
       onError: (err) => {
-        console.log(err);
+        console.error(err);
       },
       // Always refetch after error or success:
       onSettled: () => {

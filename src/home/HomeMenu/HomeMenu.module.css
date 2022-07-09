@@ -1,0 +1,36 @@
+.createNewClass {
+  color: white;
+  display: flex;
+  justify-content: space-around;
+  align-items: baseline;
+}
+
+.createNewClassIcon {
+  color: white !important;
+  margin-right: 0.5rem;
+}
+
+.createClassTitle {
+  color: white !important;
+  margin-left: 1rem;
+}
+
+.divider {
+  border: 0.5px solid white;
+}
+
+@media only screen and (max-width: 600px) {
+  .createClassTitle {
+    color: #1890ff !important;
+  }
+  .createNewClassIcon {
+    color: #1890ff !important;
+  }
+  .divider {
+    border: 0.5px solid #1890ff;
+  }
+  .createNewClass {
+    color: black;
+    text-align: center;
+  }
+}

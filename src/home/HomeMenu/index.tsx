@@ -1,13 +1,19 @@
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { Menu, Button, Divider, Typography } from "antd";
-import { useContext } from "react";
+import { Dispatch, SetStateAction, useContext } from "react";
 import { HomeContext } from "../HomeContextProvider";
 
-import styles from "./Sider.module.css";
+import styles from "./HomeMenu.module.css";
 
 const { Title } = Typography;
 
-const CustomSider = () => {
+const HomeMenu = ({
+  isMobile,
+  setIsModalVisible,
+}: {
+  isMobile?: boolean;
+  setIsModalVisible?: Dispatch<SetStateAction<boolean>>;
+}) => {
   const {
     selectedClass,
     classes,
@@ -16,33 +22,39 @@ const CustomSider = () => {
   } = useContext(HomeContext);
   return (
     <>
+      {isMobile && <Title level={5}>Select a Class</Title>}
       <Menu
-        theme="dark"
+        theme={!isMobile ? "dark" : undefined}
         selectedKeys={[selectedClass?.id || "0"]}
         mode="inline"
       >
         {!!classes?.length &&
           classes.map((item) => (
-            <Menu.Item key={item.id} onClick={() => changeSelectedClass(item)}>
+            <Menu.Item
+              key={item.id}
+              onClick={() => {
+                changeSelectedClass(item);
+                !!setIsModalVisible && setIsModalVisible(false);
+              }}
+            >
               {item.name}
             </Menu.Item>
           ))}
       </Menu>
 
-      <Divider style={{ border: "0.5px solid white" }} />
+      <Divider className={styles.divider} />
       <Button
         type="text"
         className={styles.createNewClass}
-        icon={<PlusCircleOutlined className={styles.createNewClassIcon} />}
         onClick={() => setIsCreateClassModalVisible(true)}
       >
         <Title className={styles.createClassTitle} level={5}>
-          Add Class
+          <PlusCircleOutlined className={styles.createNewClassIcon} /> Add Class
         </Title>
       </Button>
-      <Divider style={{ border: "0.5px solid white" }} />
+      <Divider className={styles.divider} />
     </>
   );
 };
 
-export default CustomSider;
+export default HomeMenu;

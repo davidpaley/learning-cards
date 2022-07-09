@@ -77,12 +77,12 @@ describe("Home Page component", () => {
     render(
       <QueryClientProvider client={queryClient}>
         <HomePage
-          classes={classesMock}
-          selectedClass={selectedClass}
-          changeSelectedClass={changeSelectedClass}
+          // classes={classesMock}
+          // selectedClass={selectedClass}
+          // changeSelectedClass={changeSelectedClass}
+          // setIsCreateClassModalVisible={setIsCreateClassModalVisible}
           updateSelectedClassAfterDelete={updateSelectedClassAfterDelete}
           isCreateClassModalVisible={false}
-          setIsCreateClassModalVisible={setIsCreateClassModalVisible}
         />
       </QueryClientProvider>
     );
@@ -99,11 +99,11 @@ describe("Home Page component", () => {
     render(
       <QueryClientProvider client={queryClient}>
         <HomePage
-          classes={[]}
-          changeSelectedClass={changeSelectedClass}
+          // classes={[]}
+          // changeSelectedClass={changeSelectedClass}
+          // setIsCreateClassModalVisible={setIsCreateClassModalVisible}
           updateSelectedClassAfterDelete={updateSelectedClassAfterDelete}
           isCreateClassModalVisible={false}
-          setIsCreateClassModalVisible={setIsCreateClassModalVisible}
         />
       </QueryClientProvider>
     );

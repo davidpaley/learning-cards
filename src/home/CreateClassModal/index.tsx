@@ -5,6 +5,7 @@ import { CLASSES_QUERY } from "../../constants";
 import * as api from "../../api/classes";
 import { useSession } from "next-auth/react";
 import { CustomClass } from "../../types";
+import styles from "./CreateClassModal.module.css";
 
 interface CreateClassModalProps extends ModalProps {
   close: () => void;
@@ -31,7 +32,7 @@ const CreateClassModal: FC<CreateClassModalProps> = (modalProps) => {
     },
     {
       onError: (err) => {
-        console.log(err);
+        console.error(err);
       },
       // Always refetch after error or success:
       onSettled: () => {
@@ -71,7 +72,8 @@ const CreateClassModal: FC<CreateClassModalProps> = (modalProps) => {
       }
       onCancel={onClose}
       title={"Create Class"}
-      width="50%"
+      width="100%"
+      className={styles.modalContainer}
       {...modalProps}
     >
       <Form form={form} preserve={false} onFinish={handleFormSubmit}>
