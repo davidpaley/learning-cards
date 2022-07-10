@@ -2,6 +2,8 @@ import { render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import HomePage, { CREATE_YOUR_FIRST_CLASS_LABEL } from "../index";
 import { NEW_DECK_LABEL } from "../../AddNewDeckButton";
+import { HomeContext } from "../../HomeContextProvider";
+import { CustomClass } from "../../../types";
 
 jest.mock("next-auth/react", () => {
   const originalModule = jest.requireActual("next-auth/react");
@@ -32,7 +34,7 @@ Object.defineProperty(window, "matchMedia", {
   })),
 });
 
-const classesMock = [
+const classesMock: CustomClass[] = [
   {
     name: "Backend",
     decks: [
@@ -40,7 +42,7 @@ const classesMock = [
         id: "cl2jmr7wo0033w8vgjelq00u2",
         classId: "cl2jmqeqv0012w8vggul9u8ow",
         name: "General info",
-        creationDate: "2022-04-28T23:21:29.544Z",
+        creationDate: new Date("2022-04-28T23:21:29.544Z"),
       },
     ],
     id: "cl2jmqeqv0012w8vggul9u8ow",
@@ -52,13 +54,13 @@ const classesMock = [
         id: "cl34zv5po0130sqwqhcya6vck",
         classId: "cl2jmqncb0023w8vg1lv72739",
         name: "Interview Questions",
-        creationDate: "2022-05-13T22:11:38.028Z",
+        creationDate: new Date("2022-05-13T22:11:38.028Z"),
       },
       {
         id: "cl34zvd0p0140sqwqhbpzdykl",
         classId: "cl2jmqncb0023w8vg1lv72739",
         name: "UI UX",
-        creationDate: "2022-05-13T22:11:47.497Z",
+        creationDate: new Date("2022-05-13T22:11:47.497Z"),
       },
     ],
     id: "cl2jmqncb0023w8vg1lv72739",
@@ -68,25 +70,29 @@ const changeSelectedClass = jest.fn();
 const updateSelectedClassAfterDelete = jest.fn();
 const setIsCreateClassModalVisible = jest.fn();
 
-describe("Home Page component", () => {
-  it("renders a list of contacts", () => {
-    const queryClient = new QueryClient();
-
+describe("Home Page component behaviour", () => {
+  it("renders a list of contacts correctly", () => {
     const selectedClass = classesMock[0];
+    const queryClient = new QueryClient();
 
     render(
       <QueryClientProvider client={queryClient}>
-        <HomePage
-          // classes={classesMock}
-          // selectedClass={selectedClass}
-          // changeSelectedClass={changeSelectedClass}
-          // setIsCreateClassModalVisible={setIsCreateClassModalVisible}
-          updateSelectedClassAfterDelete={updateSelectedClassAfterDelete}
-          isCreateClassModalVisible={false}
-        />
+        <HomeContext.Provider
+          value={{
+            classes: classesMock,
+            selectedClass: selectedClass,
+            changeSelectedClass: changeSelectedClass,
+            setIsCreateClassModalVisible: setIsCreateClassModalVisible,
+          }}
+        >
+          <HomePage
+            updateSelectedClassAfterDelete={updateSelectedClassAfterDelete}
+            isCreateClassModalVisible={false}
+          />
+        </HomeContext.Provider>
       </QueryClientProvider>
     );
-    expect(screen.getByText(`${selectedClass.name} decks`)).toBeVisible();
+    expect(screen.getByText(`${selectedClass.name} class`)).toBeVisible();
     expect(screen.getByText(NEW_DECK_LABEL)).toBeVisible();
     expect(
       screen.queryByText(CREATE_YOUR_FIRST_CLASS_LABEL)
@@ -98,13 +104,18 @@ describe("Home Page component", () => {
 
     render(
       <QueryClientProvider client={queryClient}>
-        <HomePage
-          // classes={[]}
-          // changeSelectedClass={changeSelectedClass}
-          // setIsCreateClassModalVisible={setIsCreateClassModalVisible}
-          updateSelectedClassAfterDelete={updateSelectedClassAfterDelete}
-          isCreateClassModalVisible={false}
-        />
+        <HomeContext.Provider
+          value={{
+            classes: [],
+            changeSelectedClass: changeSelectedClass,
+            setIsCreateClassModalVisible: setIsCreateClassModalVisible,
+          }}
+        >
+          <HomePage
+            updateSelectedClassAfterDelete={updateSelectedClassAfterDelete}
+            isCreateClassModalVisible={false}
+          />
+        </HomeContext.Provider>
       </QueryClientProvider>
     );
 

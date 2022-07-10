@@ -2,7 +2,7 @@ import React from "react";
 import { CustomClass } from "../../types";
 
 interface HomeContextProps {
-  selectedClass: CustomClass;
+  selectedClass?: CustomClass;
   classes: CustomClass[];
   changeSelectedClass: (newClassSelected: CustomClass) => void;
   setIsCreateClassModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
