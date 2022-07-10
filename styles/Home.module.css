@@ -11,4 +11,7 @@
   .siderContainer {
     display: none;
   }
+  .classContent {
+    padding: 1rem;
+  }
 }

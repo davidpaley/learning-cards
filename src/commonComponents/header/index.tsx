@@ -1,10 +1,11 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { Layout, Menu, Button, Dropdown } from "antd";
+import { Layout, Menu, Button, Dropdown, MenuProps } from "antd";
 import { LoginOutlined, LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { signIn, signOut } from "next-auth/react";
 import styles from "./Header.module.css";
-import MobileHomerMenu from "./MobileHomeMenu";
+import MobileMenu from "./MobileMenu";
+import { useState } from "react";
 
 const { Header: AntdHeader } = Layout;
 
@@ -20,9 +21,20 @@ const Header = ({
   pageDescription = "Learn with space repetition!",
 }: HeaderProps) => {
   const { pathname } = useRouter();
+  const [visible, setVisible] = useState(false);
+
+  const handleMenuClick: MenuProps["onClick"] = (e) => {
+    setVisible((prevState) => !prevState);
+  };
+
+  const handleVisibleChange = (flag: boolean) => {
+    setVisible(flag);
+  };
+  const pathIncludeHome = pathname.includes("home");
+  const pathIncludeEdit = pathname.includes("edit");
   const menu = (
-    <Menu>
-      <Menu.Item>
+    <Menu onClick={handleMenuClick}>
+      <Menu.Item key="random">
         {isLogged ? (
           <a onClick={() => signOut()}>
             Log out <LogoutOutlined />
@@ -43,8 +55,17 @@ const Header = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <AntdHeader className={styles.customHeader}>
-        {pathname.includes("home") && <MobileHomerMenu />}
-        <Dropdown overlay={menu} placement="bottomRight">
+        {pathIncludeEdit || pathIncludeHome ? (
+          <MobileMenu isEditPage={pathIncludeEdit} />
+        ) : (
+          <div />
+        )}
+        <Dropdown
+          overlay={menu}
+          placement="bottomRight"
+          onVisibleChange={handleVisibleChange}
+          visible={visible}
+        >
           <Button className={styles.menuLink} type="text">
             <UserOutlined className={styles.loginIcon} />
           </Button>

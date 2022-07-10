@@ -14,14 +14,15 @@ import { CARD_QUERY } from "../../../src/constants";
 import { Layout, Breadcrumb, Row, Form } from "antd";
 
 import { CreateOrUpdateCard, createOrUpdateCard } from "../../../src/api/cards";
-import SidebarCards from "../../../src/editDeck/SiderCards";
-import FormCardsEdit from "../../../src/editDeck/formCards";
-import DeleteCardModal from "../../../src/editDeck/deleteCards";
+import EditCardsMenu from "../../../src/editDeck/EditCardsMenu";
+import FormCardsEdit from "../../../src/editDeck/FormCards";
+import DeleteCardModal from "../../../src/editDeck/DeleteCard";
 import { getSession } from "next-auth/react";
 import { HomeOutlined } from "@ant-design/icons";
 import { CardForm } from "../../../src/types";
 import Link from "next/link";
 import CustomLayout from "../../../src/commonComponents/layout";
+import EditContextProvider from "../../../src/editDeck/EditContextProvider";
 
 const { Content } = Layout;
 const prisma = new PrismaClient();
@@ -106,7 +107,7 @@ const Home: NextPage<HomeProp> = ({ deckId }: HomeProp) => {
     handleCreateOrUpdateCard({ ...card, ...value });
   };
 
-  const cardSelected = (event) => {
+  const handleSelectedCard = (event) => {
     const cardSelected = deckForCards?.cards.find(
       (card) => card.id === event.key
     );
@@ -116,44 +117,50 @@ const Home: NextPage<HomeProp> = ({ deckId }: HomeProp) => {
   const setSelectedCardWhenDeleteCard = () => {
     setSelectedCard(deckForCards?.cards[0]);
   };
-
+  const { Sider } = Layout;
   return (
-    <CustomLayout
-      headerProps={{
-        isLogged: true,
-        pageTitle: "Edit Cards!",
-        pageDescription: "Learn with space repetition!",
+    <EditContextProvider
+      value={{
+        selectedCard: selectedCard,
+        handleSelectedCard: handleSelectedCard,
+        deckForCards: deckForCards,
+        handleCreateOrUpdateCard: handleCreateOrUpdateCard,
       }}
     >
-      <SidebarCards
-        selectedCard={selectedCard}
-        cardSelected={cardSelected}
-        deckForCards={deckForCards}
-        handleCreateOrUpdateCard={handleCreateOrUpdateCard}
-      />
-      <Content className={styles.editDeckContent}>
-        <Row align="middle" justify="space-between">
-          <Breadcrumb className={styles.breadcrumb}>
-            <Breadcrumb.Item>
-              <Link href="/home">
-                <HomeOutlined />
-              </Link>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item href="">{deckForCards?.name}</Breadcrumb.Item>
-            <Breadcrumb.Item>{"Edit Deck"}</Breadcrumb.Item>
-          </Breadcrumb>
-          <DeleteCardModal
+      <CustomLayout
+        headerProps={{
+          isLogged: true,
+          pageTitle: "Edit Cards!",
+          pageDescription: "Learn with space repetition!",
+        }}
+      >
+        <Sider className={styles.siderContainer}>
+          <EditCardsMenu />
+        </Sider>
+        <Content className={styles.editDeckContent}>
+          <Row align="middle" justify="space-between">
+            <Breadcrumb className={styles.breadcrumb}>
+              <Breadcrumb.Item>
+                <Link href="/home">
+                  <HomeOutlined />
+                </Link>
+              </Breadcrumb.Item>
+              <Breadcrumb.Item href="">{deckForCards?.name}</Breadcrumb.Item>
+              <Breadcrumb.Item>{"Edit Deck"}</Breadcrumb.Item>
+            </Breadcrumb>
+            <DeleteCardModal
+              selectedCard={selectedCard}
+              setSelectedCardWhenDeleteCard={setSelectedCardWhenDeleteCard}
+            />
+          </Row>
+          <FormCardsEdit
+            handleFormSubmit={handleFormSubmit}
             selectedCard={selectedCard}
-            setSelectedCardWhenDeleteCard={setSelectedCardWhenDeleteCard}
+            form={form}
           />
-        </Row>
-        <FormCardsEdit
-          handleFormSubmit={handleFormSubmit}
-          selectedCard={selectedCard}
-          form={form}
-        />
-      </Content>
-    </CustomLayout>
+        </Content>
+      </CustomLayout>
+    </EditContextProvider>
   );
 };
 

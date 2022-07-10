@@ -224,7 +224,6 @@ const PlayPage: NextPage<{ cardsToPlay: CardType[]; deckName: string }> = ({
           </Row>
         )}
       </div>
-      );
     </CustomLayout>
   );
 };

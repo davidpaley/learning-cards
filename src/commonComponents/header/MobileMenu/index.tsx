@@ -1,10 +1,11 @@
 import { MenuOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
 import { useState } from "react";
+import EditCardsMenu from "../../../editDeck/EditCardsMenu";
 import HomeMenu from "../../../home/HomeMenu";
 import styles from "./MobileHomeMenu.module.css";
 
-const MobileHomerMenu = () => {
+const MobileMenu = ({ isEditPage }: { isEditPage?: boolean }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   return (
     <>
@@ -20,10 +21,14 @@ const MobileHomerMenu = () => {
         onCancel={() => setIsModalVisible(false)}
         footer={null}
       >
-        <HomeMenu setIsModalVisible={setIsModalVisible} isMobile />
+        {isEditPage ? (
+          <EditCardsMenu setIsModalVisible={setIsModalVisible} isMobile />
+        ) : (
+          <HomeMenu setIsModalVisible={setIsModalVisible} isMobile />
+        )}
       </Modal>
     </>
   );
 };
 
-export default MobileHomerMenu;
+export default MobileMenu;

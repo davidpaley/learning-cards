@@ -16,40 +16,6 @@
   padding-top: 1.25rem;
 }
 
-.card {
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  color: inherit;
-  text-decoration: none;
-  border: 1px solid #eaeaea;
-  border-radius: 10px;
-  transition: color 0.15s ease, border-color 0.15s ease;
-}
-
-.cards {
-  display: flex;
-  margin: 10px;
-  flex-direction: column;
-  color: inherit;
-  text-decoration: none;
-  border: 1px solid #eaeaea;
-  border-radius: 10px;
-  transition: color 0.15s ease, border-color 0.15s ease;
-}
-
-.card h2 {
-  margin: 0 0 1rem 0;
-  font-size: 1.5rem;
-}
-
-.card p {
-  margin: 0;
-  font-size: 1.25rem;
-  line-height: 1.5;
-}
-
 .createNewCardButton {
   color: white;
 }
@@ -66,10 +32,6 @@
 }
 /* =========================== */
 
-.classContent {
-  height: 100vh;
-  padding: 25px;
-}
 .createNewClass {
   color: white;
   display: flex;
@@ -89,12 +51,17 @@
   cursor: pointer;
 }
 
-.saveEditButton {
-  background-color: black;
-  color: white;
-}
-
 .editDeckContent {
   padding-left: 5rem;
   padding-right: 5rem;
+}
+
+@media only screen and (max-width: 600px) {
+  .siderContainer {
+    display: none;
+  }
+  .editDeckContent {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }

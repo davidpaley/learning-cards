@@ -22,9 +22,3 @@
   border-radius: 10px;
   transition: color 0.15s ease, border-color 0.15s ease;
 }
-
-@media only screen and (max-width: 600px) {
-  .siderContainer {
-    display: none;
-  }
-}

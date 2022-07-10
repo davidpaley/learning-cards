@@ -1,17 +1,23 @@
-import React from "react";
-import { Layout, Menu, Card, Button } from "antd";
+import React, { Dispatch, SetStateAction, useContext } from "react";
+import { Menu, Card, Button } from "antd";
 import styles from "./SiderCards.module.css";
 
-const { Sider } = Layout;
-
 import { PlusOutlined } from "@ant-design/icons";
+import { EditContext } from "../EditContextProvider";
 
-const SidebarCards = ({
-  selectedCard,
-  cardSelected,
-  deckForCards,
-  handleCreateOrUpdateCard,
+const EditCardsMenu = ({
+  isMobile,
+  setIsModalVisible,
+}: {
+  setIsModalVisible?: Dispatch<SetStateAction<boolean>>;
+  isMobile?: boolean;
 }) => {
+  const {
+    selectedCard,
+    handleSelectedCard,
+    deckForCards,
+    handleCreateOrUpdateCard,
+  } = useContext(EditContext);
   const handleCreateNewCard = () => {
     const newCard = {
       question: "  ",
@@ -21,15 +27,25 @@ const SidebarCards = ({
       level: 0,
     };
     handleCreateOrUpdateCard(newCard);
+    if (setIsModalVisible) {
+      setIsModalVisible(false);
+    }
+  };
+
+  const onHandleSelected = (event) => {
+    handleSelectedCard(event);
+    if (setIsModalVisible) {
+      setIsModalVisible(false);
+    }
   };
 
   return (
-    <Sider className={styles.siderContainer}>
+    <>
       <Menu
-        theme="dark"
+        theme={!isMobile ? "dark" : undefined}
         selectedKeys={[selectedCard?.id]}
         mode="inline"
-        onClick={cardSelected}
+        onClick={onHandleSelected}
       >
         {!!deckForCards?.cards?.length &&
           deckForCards?.cards.map(({ id, question }) => {
@@ -47,14 +63,14 @@ const SidebarCards = ({
       <div className={styles.sideButtonContainer}>
         <Button
           type="text"
-          className={styles.createNewCardButton}
+          className={!isMobile ? styles.createNewCardButton : ""}
           icon={<PlusOutlined />}
           onClick={handleCreateNewCard}
         >
           Create New Card
         </Button>
       </div>
-    </Sider>
+    </>
   );
 };
-export default SidebarCards;
+export default EditCardsMenu;

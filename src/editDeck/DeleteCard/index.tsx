@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import styles from "../../styles/EditDecks.module.css";
 import { Button, Modal } from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { DeleteOutlined } from "@ant-design/icons";
-import { CARD_QUERY } from "../../src/constants";
-
-import { deleteCard, DeleteCard } from "../../src/api/cards";
+import { CARD_QUERY } from "../../constants";
+import { deleteCard, DeleteCard } from "../../api/cards";
 
 const DeleteCardModal = ({ selectedCard, setSelectedCardWhenDeleteCard }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -41,12 +39,7 @@ const DeleteCardModal = ({ selectedCard, setSelectedCardWhenDeleteCard }) => {
   };
   return (
     <>
-      <Button
-        danger
-        className={styles.deleteCardButton}
-        icon={<DeleteOutlined />}
-        onClick={showModal}
-      >
+      <Button danger icon={<DeleteOutlined />} onClick={showModal}>
         Delete Card
       </Button>
       <Modal
