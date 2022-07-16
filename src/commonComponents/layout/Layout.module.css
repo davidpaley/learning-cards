@@ -14,3 +14,9 @@
   display: flex;
   overflow: auto;
 }
+
+@media only screen and (max-width: 600px) {
+  .footer {
+    flex: 0 0 10rem;
+  }
+}

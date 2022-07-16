@@ -35,7 +35,7 @@ const FormCardsEdit = ({
         }}
       >
         <Form.Item name="question">
-          <Input.TextArea maxLength={1000} placeholder="Question" rows={10} />
+          <Input.TextArea maxLength={1000} placeholder="Question" rows={5} />
         </Form.Item>
         <Divider />
         <Form.Item name="answer">
@@ -43,7 +43,7 @@ const FormCardsEdit = ({
             maxLength={1000}
             placeholder="Answer"
             className={styles.answerText}
-            rows={20}
+            rows={10}
           />
         </Form.Item>
         <Button
