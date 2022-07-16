@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useContext } from "react";
 import { Button, Form, Input, Modal, ModalProps, Space } from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { CLASSES_QUERY } from "../../constants";
@@ -6,6 +6,7 @@ import * as api from "../../api/classes";
 import { useSession } from "next-auth/react";
 import { CustomClass } from "../../types";
 import styles from "./CreateClassModal.module.css";
+import { HomeContext } from "../HomeContextProvider";
 
 interface CreateClassModalProps extends ModalProps {
   close: () => void;
@@ -19,6 +20,7 @@ interface CreateClassData {
 
 const CreateClassModal: FC<CreateClassModalProps> = (modalProps) => {
   const [form] = Form.useForm();
+  const { classes } = useContext(HomeContext);
   const { data: sessionData } = useSession();
   const queryClient = useQueryClient();
   const { isLoading, mutate: createClass } = useMutation(
@@ -34,13 +36,9 @@ const CreateClassModal: FC<CreateClassModalProps> = (modalProps) => {
       onError: (err) => {
         console.error(err);
       },
-      // Always refetch after error or success:
-      onSettled: () => {
-        queryClient.invalidateQueries([CLASSES_QUERY]);
-      },
-
       onSuccess: (response: { data: CustomClass }) => {
         modalProps.onSuccess(response.data);
+        queryClient.setQueryData([CLASSES_QUERY], [...classes, response.data]);
         modalProps.close();
       },
     }

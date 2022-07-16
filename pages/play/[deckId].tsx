@@ -142,7 +142,7 @@ const PlayPage: NextPage<{ cardsToPlay: CardType[]; deckName: string }> = ({
           <>
             <Row align="middle" justify="center">
               <Card
-                title={revealAnswerButton ? "Answer" : "Question"}
+                title={revealAnswerButton ? "Question" : "Answer"}
                 style={{ width: 900, height: 600 }}
               >
                 <p className={styles.questionOrAnswer}>

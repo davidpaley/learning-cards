@@ -61,7 +61,8 @@ const Home: NextPage = () => {
       return classesForDecks;
     },
     {
-      enabled: !!sessionData,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
     }
   );
   const [selectedClass, setSelectedClass] = useState<CustomClass | null>(
