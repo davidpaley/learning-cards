@@ -37,9 +37,9 @@ const HomePage = ({
     <>
       <Row align="middle" justify="space-between">
         <Breadcrumb>
-          <Breadcrumb.Item>{`${
-            selectedClass?.name || ""
-          } class`}</Breadcrumb.Item>
+          <Breadcrumb.Item>
+            {selectedClass && `${selectedClass?.name || ""} class`}
+          </Breadcrumb.Item>
         </Breadcrumb>
         <DeleteClassModal
           selectedClass={selectedClass}

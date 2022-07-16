@@ -28,7 +28,7 @@ model ClassForDecks {
 
 model Deck {
   id           String        @id @default(cuid())
-  classOfDeck  ClassForDecks @relation(fields: [classId], references: [id])
+  classOfDeck  ClassForDecks @relation(fields: [classId], references: [id], onDelete: Cascade)
   classId      String
   name         String
   cards        Card[]
@@ -48,7 +48,7 @@ model Card {
   imageQuestion String?
   imageAnswer   String?
 
-  deck   Deck   @relation(fields: [deckId], references: [id])
+  deck   Deck   @relation(fields: [deckId], references: [id], onDelete: Cascade)
   deckId String
 
   creationDate DateTime @default(now())

@@ -37,11 +37,6 @@ export default async (req: NextApiRequest, res: NextApiResponse<Response>) => {
     return;
   } else if (req.method === "DELETE") {
     const { id } = JSON.parse(req.body);
-    await prisma.deck.deleteMany({
-      where: {
-        classId: id as string,
-      },
-    });
     const deleteClass = await prisma.classForDecks.delete({
       where: {
         id,
