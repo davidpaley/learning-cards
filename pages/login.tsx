@@ -1,11 +1,22 @@
 import React, { useEffect } from "react";
 import type { NextPage } from "next";
-import { useSession, signIn, signOut, getSession } from "next-auth/react";
+import {
+  useSession,
+  signIn,
+  signOut,
+  getSession,
+  getProviders,
+  LiteralUnion,
+  ClientSafeProvider,
+} from "next-auth/react";
+
 import Router from "next/router";
-import { Button, Image, Space } from "antd";
+import { Button, Space } from "antd";
 import { PrismaClient } from "@prisma/client";
 import CustomLayout from "../src/commonComponents/layout";
 import styles from "../styles/Login.module.css";
+import { GithubOutlined } from "@ant-design/icons";
+import { BuiltInProviderType } from "next-auth/providers";
 
 const prisma = new PrismaClient();
 
@@ -27,13 +38,21 @@ export async function getServerSideProps(context) {
       },
     };
   }
-
   return {
-    props: {},
+    props: {
+      providers: await getProviders(),
+    },
   };
 }
 
-const LoginPage: NextPage = () => {
+const LoginPage: NextPage<any> = ({
+  providers,
+}: {
+  providers: Record<
+    LiteralUnion<BuiltInProviderType, string>,
+    ClientSafeProvider
+  >;
+}) => {
   const { data } = useSession();
 
   useEffect(() => {
@@ -58,14 +77,9 @@ const LoginPage: NextPage = () => {
       }}
     >
       <Space className={styles.root} direction="vertical">
-        <Image
-          width={200}
-          preview={false}
-          src="https://madrerusia.com/wp-content/uploads/2017/10/920x312-Contacts-1.jpg"
-        />
-
-        <Button type="primary" onClick={() => signIn()}>
-          Sign in
+        <GithubOutlined style={{ fontSize: "20rem", width: "20rem" }} />
+        <Button type="default" onClick={() => signIn(providers.github.id)}>
+          Sign in with Github
         </Button>
       </Space>
     </CustomLayout>

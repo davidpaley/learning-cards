@@ -1,9 +1,9 @@
 import type { NextPage } from "next";
 import { Button, Layout, Space } from "antd";
 import styles from "../styles/Root.module.css";
+import { useSession, signIn } from "next-auth/react";
 import Link from "next/link";
 import CustomLayout from "../src/commonComponents/layout";
-import { useSession } from "next-auth/react";
 
 const { Content } = Layout;
 
@@ -35,9 +35,9 @@ const RootPage: NextPage = () => {
           >
             Learn about this project
           </Button>
-          <Link href="/home">
-            <Button type="primary">START NOW</Button>
-          </Link>
+          <Button onClick={() => signIn()} type="primary">
+            START NOW
+          </Button>
         </Space>
       </Content>
     </CustomLayout>

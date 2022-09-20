@@ -11,7 +11,8 @@ export default NextAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
     }),
   ],
-  theme: {
-    colorScheme: "light",
+  pages: {
+    signIn: "/login",
+    signOut: "/login",
   },
 });
