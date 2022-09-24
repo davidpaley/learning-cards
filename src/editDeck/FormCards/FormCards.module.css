@@ -24,9 +24,15 @@
 .saveEditButton {
   background-color: black;
   color: white;
+  max-width: 10rem;
+  align-self: end;
+  width: 100%;
 }
 
 @media only screen and (max-width: 600px) {
+  .saveEditButton {
+    max-width: 100%;
+  }
   .card {
     padding-top: 1rem;
   }

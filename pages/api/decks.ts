@@ -1,67 +1,74 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
-import { getSession } from "next-auth/react";
 import { DeckResponse } from "../../src/types";
+import executeRequest from "../../src/utils/api";
 const prisma = new PrismaClient();
 
-export interface ResponseData {
-  isNotLogged?: boolean;
+export interface Response {
   data?: DeckResponse | DeckResponse[];
-  message?: string;
 }
 
-export default async (
+const postRequest = async (
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData>
+  res: NextApiResponse<Response>
 ) => {
-  const session = await getSession({ req });
-  if (!session) {
-    res.status(200).json({ isNotLogged: true });
-  }
-  if (req.method === "POST") {
-    const deck = JSON.parse(req.body);
-    const saveDeck = await prisma.deck.create({
-      data: deck,
-    });
-    res.status(200).json({ data: saveDeck, isNotLogged: false });
-    return;
-  } else if (req.method === "GET") {
-    const { id } = req.query;
-    if (!!id) {
-      const deck = await prisma.deck.findUnique({
-        where: {
-          id: id as string,
-        },
-        select: {
-          cards: true,
-          name: true,
-          classOfDeck: true,
-          id: true,
-        },
-      });
-      res.status(200).json({ data: deck, isNotLogged: false });
-      return;
-    }
-    const foundDesks = await prisma.deck.findMany({
-      select: {
-        name: true,
-        cards: true,
-      },
-    });
-    res.status(200).json({
-      data: foundDesks,
-      isNotLogged: false,
-    });
-    return;
-  } else if (req.method === "DELETE") {
-    const deck = JSON.parse(req.body);
-    const deleteDeck = await prisma.deck.delete({
+  const deck = JSON.parse(req.body);
+  const saveDeck = await prisma.deck.create({
+    data: deck,
+  });
+  res.status(201).json({ data: saveDeck });
+};
+
+const getRequest = async (
+  req: NextApiRequest,
+  res: NextApiResponse<Response>
+) => {
+  const { id } = req.query;
+  if (!!id) {
+    const deck = await prisma.deck.findUnique({
       where: {
-        id: deck.id,
+        id: id as string,
+      },
+      select: {
+        cards: true,
+        name: true,
+        classOfDeck: true,
+        id: true,
       },
     });
-    res.status(200).json({ data: deleteDeck, isNotLogged: false });
+    res.status(200).json({ data: deck });
     return;
   }
-  return res.status(405).json({ message: "Method not allowed" });
+  const foundDesks = await prisma.deck.findMany({
+    select: {
+      name: true,
+      cards: true,
+    },
+  });
+  res.status(200).json({
+    data: foundDesks,
+  });
+};
+
+const deleteRequest = async (
+  req: NextApiRequest,
+  res: NextApiResponse<Response>
+) => {
+  const deck = JSON.parse(req.body);
+  const deleteDeck = await prisma.deck.delete({
+    where: {
+      id: deck.id,
+    },
+  });
+  res.status(200).json({ data: deleteDeck });
+};
+
+const requestFunctions = {
+  POST: postRequest,
+  GET: getRequest,
+  DELETE: deleteRequest,
+};
+
+export default async (req: NextApiRequest, res: NextApiResponse<Response>) => {
+  executeRequest(req, res, requestFunctions);
 };

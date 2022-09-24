@@ -77,7 +77,7 @@ const LoginPage: NextPage<any> = ({
       }}
     >
       <Space className={styles.root} direction="vertical">
-        <GithubOutlined style={{ fontSize: "20rem", width: "20rem" }} />
+        <GithubOutlined className={styles.iconStyle} />
         <Button type="default" onClick={() => signIn(providers.github.id)}>
           Sign in with Github
         </Button>

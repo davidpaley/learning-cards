@@ -1,64 +1,68 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import { Card } from "@prisma/client";
-import { getSession } from "next-auth/react";
+import executeRequest from "../../src/utils/api";
 
 const prisma = new PrismaClient();
 
 type NewCard = Partial<Card>;
 
-export default async (
+const postRequest = async (req: NextApiRequest, res: NextApiResponse<Card>) => {
+  const newCard: NewCard = JSON.parse(req.body);
+  const { answer, question, level, nextReviewDate, isDone, id, deckId } =
+    newCard;
+  const saveCard = await prisma.card.upsert({
+    where: {
+      id: id || "-1",
+    },
+    update: {
+      answer: !!answer ? answer : undefined,
+      question: !!question ? question : undefined,
+      level: !!level ? level : undefined,
+      isDone: !!isDone ? isDone : false,
+      nextReviewDate: !!nextReviewDate ? nextReviewDate : undefined,
+    },
+    create: {
+      question,
+      answer,
+      nextReviewDate: nextReviewDate || new Date(),
+      deckId,
+      level: level || 1,
+      isDone: false,
+    },
+  });
+  res.status(201).json(saveCard);
+};
+
+const getRequest = async (req: NextApiRequest, res: NextApiResponse<Card>) => {
+  const { id } = req.query;
+  const card = await prisma.card.findUnique({
+    where: {
+      id: id as string,
+    },
+  });
+  res.status(200).json(card);
+};
+
+const deleteRequest = async (
   req: NextApiRequest,
-  res: NextApiResponse<Card | { isNotLogged?: boolean; message?: string }>
+  res: NextApiResponse<Card>
 ) => {
-  const session = await getSession({ req });
-  if (!session) {
-    res.status(200).json({ isNotLogged: true });
-  }
-  if (req.method === "POST") {
-    const newCard: NewCard = JSON.parse(req.body);
-    const { answer, question, level, nextReviewDate, isDone, id, deckId } =
-      newCard;
-    const saveCard = await prisma.card.upsert({
-      where: {
-        id: id || "-1",
-      },
-      update: {
-        answer: !!answer ? answer : undefined,
-        question: !!question ? question : undefined,
-        level: !!level ? level : undefined,
-        isDone: !!isDone ? isDone : false,
-        nextReviewDate: !!nextReviewDate ? nextReviewDate : undefined,
-      },
-      create: {
-        question,
-        answer,
-        nextReviewDate: nextReviewDate || new Date(),
-        deckId,
-        level: level || 1,
-        isDone: false,
-      },
-    });
-    res.status(200).json(saveCard);
-    return;
-  } else if (req.method === "GET") {
-    const { id } = req.query;
-    const card = await prisma.card.findUnique({
-      where: {
-        id: id as string,
-      },
-    });
-    res.status(200).json(card);
-    return;
-  } else if (req.method === "DELETE") {
-    const cardId = JSON.parse(req.body);
-    const deleteCard = await prisma.card.delete({
-      where: {
-        id: cardId as string,
-      },
-    });
-    res.status(200).json(deleteCard);
-    return;
-  }
-  return res.status(405).json({ message: "Method not allowed" });
+  const cardId = JSON.parse(req.body);
+  const deleteCard = await prisma.card.delete({
+    where: {
+      id: cardId,
+    },
+  });
+  res.status(200).json(deleteCard);
+};
+
+const requestFunctions = {
+  POST: postRequest,
+  GET: getRequest,
+  DELETE: deleteRequest,
+};
+
+export default async (req: NextApiRequest, res: NextApiResponse<Card>) => {
+  executeRequest(req, res, requestFunctions);
 };

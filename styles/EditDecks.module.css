@@ -23,6 +23,11 @@
 .createNewCardButton:hover {
   color: #e6f7ff;
 }
+
+.createNewCardButton:focus {
+  color: #e6f7ff;
+}
+
 .cardMenu {
   display: flex;
 }

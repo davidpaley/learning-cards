@@ -12,6 +12,10 @@
   color: #e6f7ff;
 }
 
+.createNewCardButton:focus {
+  color: #e6f7ff;
+}
+
 .cards {
   display: flex;
   margin: 10px;

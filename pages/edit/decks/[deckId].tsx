@@ -12,7 +12,6 @@ import {
 import { getDeck } from "../../../src/api/decks";
 import { CARD_QUERY } from "../../../src/constants";
 import { Layout, Breadcrumb, Row, Form } from "antd";
-
 import { CreateOrUpdateCard, createOrUpdateCard } from "../../../src/api/cards";
 import EditCardsMenu from "../../../src/editDeck/EditCardsMenu";
 import FormCardsEdit from "../../../src/editDeck/FormCards";
@@ -23,6 +22,7 @@ import { CardForm } from "../../../src/types";
 import Link from "next/link";
 import CustomLayout from "../../../src/commonComponents/layout";
 import EditContextProvider from "../../../src/editDeck/EditContextProvider";
+import { getDeckWithSortedCards } from "../../../src/utils/deckEdition";
 
 const { Content } = Layout;
 const prisma = new PrismaClient();
@@ -53,7 +53,9 @@ export async function getServerSideProps(context) {
         id: true,
       },
     });
-    return JSON.parse(JSON.stringify(deck));
+    const deckObject = JSON.parse(JSON.stringify(deck));
+
+    return getDeckWithSortedCards(deckObject);
   });
 
   return {
@@ -68,12 +70,19 @@ export type HomeProp = {
   deckId: string;
 };
 
-const Home: NextPage<HomeProp> = ({ deckId }: HomeProp) => {
+const EditDeck: NextPage<HomeProp> = ({ deckId }: HomeProp) => {
   const queryClient = useQueryClient();
-  const { data: deckForCards } = useQuery([CARD_QUERY, deckId], async () => {
-    const deckResponse = await getDeck(deckId);
-    return deckResponse.data;
-  });
+  const { data: deckForCards } = useQuery(
+    [CARD_QUERY, deckId],
+    async () => {
+      const { data } = await getDeck(deckId);
+      return getDeckWithSortedCards(data);
+    },
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+    }
+  );
 
   const [selectedCard, setSelectedCard] = useState<Card>(
     deckForCards?.cards?.length ? deckForCards?.cards[0] : null
@@ -164,4 +173,4 @@ const Home: NextPage<HomeProp> = ({ deckId }: HomeProp) => {
   );
 };
 
-export default Home;
+export default EditDeck;
