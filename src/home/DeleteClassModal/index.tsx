@@ -52,7 +52,7 @@ const DeleteClassModal = ({
         onOk={handleDeleteClassSelected}
         onCancel={() => setIsModalVisible(false)}
       >
-        <p>Are you want to delete this class?</p>
+        <p>Are you sure you want to delete this class?</p>
       </Modal>
     </>
   );

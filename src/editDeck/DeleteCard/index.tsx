@@ -48,7 +48,7 @@ const DeleteCardModal = ({ selectedCard, setSelectedCardWhenDeleteCard }) => {
         onOk={handleDeleteCardSelected}
         onCancel={() => setIsModalVisible(false)}
       >
-        <p>Are you want to delete this card?</p>
+        <p>Are you sure you want to delete this card?</p>
       </Modal>
     </>
   );

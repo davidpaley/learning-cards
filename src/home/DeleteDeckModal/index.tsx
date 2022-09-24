@@ -52,7 +52,7 @@ const DeleteDeckModal = ({ selectedDeck, updateSelectedDeckAfterDelete }) => {
         onOk={handleDeleteDeckSelected}
         onCancel={() => setIsModalVisible(false)}
       >
-        <p>Are you want to delete this deck?</p>
+        <p>Are you sure you want to delete this deck?</p>
       </Modal>
     </>
   );
