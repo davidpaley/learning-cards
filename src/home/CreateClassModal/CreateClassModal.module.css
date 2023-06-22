@@ -1,6 +1,10 @@
 .modalContainer {
   padding: 0 25%;
 }
+
+.label {
+  padding-bottom: 1rem
+}
 @media only screen and (max-width: 600px) {
   .modalContainer {
     padding: 0;

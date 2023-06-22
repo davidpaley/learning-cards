@@ -1,5 +1,13 @@
 import { FC } from "react";
-import { Button, Form, Input, Modal, ModalProps, Space } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  Modal,
+  ModalProps,
+  Space,
+  Typography,
+} from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { CLASSES_QUERY } from "../../constants";
 import * as api from "../../api/decks";
@@ -75,6 +83,10 @@ const CreateNewDeckModal: FC<CreateNewDeckModalProps> = (modalProps) => {
       width="50%"
       {...modalProps}
     >
+      <Typography style={{ paddingBottom: "1rem" }}>
+        Create a new Deck, so you can add cards inside with questions and
+        answers
+      </Typography>
       <Form form={form} preserve={false} onFinish={handleFormSubmit}>
         <Form.Item
           name="deckName"

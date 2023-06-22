@@ -1,7 +1,10 @@
 import { render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "react-query";
-import HomePage, { CREATE_YOUR_FIRST_CLASS_LABEL } from "../index";
-import { NEW_DECK_LABEL } from "../../AddNewDeckButton";
+import HomePage, {
+  CREATE_YOUR_FIRST_CLASS_LABEL,
+  NEW_DECK_LABEL,
+} from "../index";
+
 import { HomeContext } from "../../HomeContextProvider";
 import { CustomClass } from "../../../types";
 

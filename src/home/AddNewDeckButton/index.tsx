@@ -1,29 +1,33 @@
-import { PlusOutlined } from "@ant-design/icons";
-import { Button } from "antd";
-
-import { useState } from "react";
 import CreateNewDeckModal from "./CreateNewDeckModal";
-import styles from "./AddNewDeckButton.module.css";
+import { InstructionBlock } from "../../instructionBlock";
 
-export const NEW_DECK_LABEL = "New Deck";
-
-const AddNewDeckButton = ({ classId }: { classId: string }) => {
-  const [showModal, setShowModal] = useState(false);
-  const handleShowModal = () => setShowModal((prevState) => !prevState);
+const AddNewDeckButton = ({
+  classId,
+  emptyDecks,
+  setShowDeckModal,
+  handleDeckModal,
+  showDeckModal,
+}: {
+  classId: string;
+  emptyDecks: boolean;
+  setShowDeckModal: React.Dispatch<React.SetStateAction<boolean>>;
+  handleDeckModal: () => void;
+  showDeckModal: boolean;
+}) => {
   return (
     <>
-      <Button
-        type="text"
-        className={styles.createNewDeckButton}
-        icon={<PlusOutlined className={styles.icon} />}
-        onClick={() => setShowModal(true)}
-      >
-        {NEW_DECK_LABEL}
-      </Button>
+      {emptyDecks && (
+        <InstructionBlock
+          onClick={() => setShowDeckModal(true)}
+          preInstructionString="Now you need to create a new Deck for this class. Please "
+          link="create "
+          postInstructionString="one"
+        />
+      )}
       <CreateNewDeckModal
         classId={classId}
-        close={handleShowModal}
-        visible={showModal}
+        close={handleDeckModal}
+        visible={showDeckModal}
       />
     </>
   );

@@ -158,7 +158,6 @@ const PlayPage: NextPage<{ cardsToPlay: CardType[]; deckName: string }> = ({
                 <Button
                   className={styles.revealAnswerButton}
                   type="primary"
-                  shape="round"
                   onClick={() => setRevealAnswerButton(false)}
                 >
                   <Title className={styles.answerTitle} level={5}>

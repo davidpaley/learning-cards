@@ -8,11 +8,18 @@
   font-size: 1.5rem;
 }
 
+.newDeckButton {
+  margin-right: 1rem;
+}
+
 @media only screen and (max-width: 600px) {
   .listElementContainer {
     text-align: center;
   }
   .firstClassButton {
     text-align: center;
+  }
+  .actionButtons {
+    margin-top: 1rem;
   }
 }

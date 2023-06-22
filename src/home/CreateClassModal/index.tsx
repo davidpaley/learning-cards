@@ -1,5 +1,13 @@
 import { FC, useContext } from "react";
-import { Button, Form, Input, Modal, ModalProps, Space } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  Modal,
+  ModalProps,
+  Space,
+  Typography,
+} from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { CLASSES_QUERY } from "../../constants";
 import * as api from "../../api/classes";
@@ -74,6 +82,11 @@ const CreateClassModal: FC<CreateClassModalProps> = (modalProps) => {
       className={styles.modalContainer}
       {...modalProps}
     >
+      <Typography className={styles.label}>
+        Create a new Class, where you are going to add Decks of the same
+        category (for instance: "Frontend Development", where you would add a
+        deck named "React")
+      </Typography>
       <Form form={form} preserve={false} onFinish={handleFormSubmit}>
         <Form.Item
           name="className"

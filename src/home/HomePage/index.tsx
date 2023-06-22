@@ -1,12 +1,7 @@
-import React, { useContext } from "react";
-
+import React, { useContext, useState } from "react";
 import Link from "next/link";
 import { Breadcrumb, Button, Row, List, Divider, Space } from "antd";
-import {
-  EditOutlined,
-  PlayCircleOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
+import { EditOutlined, PlayCircleOutlined } from "@ant-design/icons";
 import { Typography } from "antd";
 import CreateClassModal from "../CreateClassModal";
 
@@ -15,13 +10,16 @@ import DeleteClassModal from "../DeleteClassModal";
 import DeleteDeckModal from "../DeleteDeckModal";
 import styles from "./HomePage.module.css";
 import { HomeContext } from "../HomeContextProvider";
+import { InstructionBlock } from "../../instructionBlock";
 
-export const CREATE_YOUR_FIRST_CLASS_LABEL = "Create your first Class!";
+export const CREATE_YOUR_FIRST_CLASS_LABEL = "+ Create your first Class!";
 
 interface HomePageArgs {
   updateSelectedClassAfterDelete: () => void;
   isCreateClassModalVisible: boolean;
 }
+
+export const NEW_DECK_LABEL = "+ Create New Deck";
 
 const HomePage = ({
   updateSelectedClassAfterDelete,
@@ -33,6 +31,8 @@ const HomePage = ({
     changeSelectedClass,
     setIsCreateClassModalVisible,
   } = useContext(HomeContext);
+  const [showDeckModal, setShowDeckModal] = useState(false);
+  const handleDeckModal = () => setShowDeckModal((prevState) => !prevState);
   return (
     <>
       <Row align="middle" justify="space-between">
@@ -41,10 +41,28 @@ const HomePage = ({
             {selectedClass && `${selectedClass?.name || ""} class`}
           </Breadcrumb.Item>
         </Breadcrumb>
-        <DeleteClassModal
-          selectedClass={selectedClass}
-          updateSelectedClassAfterDelete={updateSelectedClassAfterDelete}
-        />
+        {classes?.length ? (
+          <div className={styles.actionButtons}>
+            <Button
+              className={styles.newDeckButton}
+              onClick={() => setShowDeckModal(true)}
+            >
+              {NEW_DECK_LABEL}
+            </Button>
+
+            <DeleteClassModal
+              selectedClass={selectedClass}
+              updateSelectedClassAfterDelete={updateSelectedClassAfterDelete}
+            />
+          </div>
+        ) : (
+          <Button
+            type="primary"
+            onClick={() => setIsCreateClassModalVisible(true)}
+          >
+            {CREATE_YOUR_FIRST_CLASS_LABEL}
+          </Button>
+        )}
       </Row>
 
       <Divider />
@@ -102,16 +120,20 @@ const HomePage = ({
       )}
 
       {!classes?.length ? (
-        <Button
-          type="primary"
-          icon={<PlusOutlined className={styles.createNewClassIcon} />}
+        <InstructionBlock
           onClick={() => setIsCreateClassModalVisible(true)}
-          style={{ width: "100%", height: "90px", fontSize: "1.5rem" }}
-        >
-          {CREATE_YOUR_FIRST_CLASS_LABEL}
-        </Button>
+          preInstructionString="You don't have any class created yet, do you want to "
+          link="create "
+          postInstructionString="one?"
+        />
       ) : (
-        <AddNewDeckButton classId={selectedClass?.id} />
+        <AddNewDeckButton
+          showDeckModal={showDeckModal}
+          setShowDeckModal={setShowDeckModal}
+          handleDeckModal={handleDeckModal}
+          classId={selectedClass?.id}
+          emptyDecks={!selectedClass?.decks?.length}
+        />
       )}
 
       <CreateClassModal
