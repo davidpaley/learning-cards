@@ -1,8 +1,9 @@
 # About this project
 
-The objective of this project is to use spaced repetition to remember things. 
+The objective of this project is to use spaced repetition to remember things.
 
 You create `Decks` and every deck has `Cards`. The cards can be in different "levels", from 1 to 5. Cards in different levels, has different frecuencies to show up in the application. Cards in level:
+
 1. are shown every day
 2. are shown every 3 days
 3. are shown every 7 days
@@ -11,11 +12,11 @@ You create `Decks` and every deck has `Cards`. The cards can be in different "le
 
 This is the [file](./src/constants.ts) where it is configured.
 
-All cards start in level 1. Every time you reply a card ok, it will go to the next level (you will answer it less frecuently). If you reply wrong, it will go to level 1 again. 
+All cards start in level 1. Every time you reply a card ok, it will go to the next level (you will answer it less frecuently). If you reply wrong, it will go to level 1 again.
 
 ### Learn more about Spaced repetition
-You can learn about space repetition [here](https://ncase.me/remember/) and [here](https://en.wikipedia.org/wiki/Spaced_repetition#:~:text=Spaced%20repetition%20is%20a%20method,fact%20is%20presented%20or%20said.).
 
+You can learn about space repetition [here](https://ncase.me/remember/) and [here](https://en.wikipedia.org/wiki/Spaced_repetition#:~:text=Spaced%20repetition%20is%20a%20method,fact%20is%20presented%20or%20said.).
 
 ## Deployment
 
@@ -24,6 +25,7 @@ This project is deployed [here](https://learning-cards.vercel.app/) with Vercel 
 ## Technologies used
 
 Technologies used for this project
+
 - This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 - The ORM used is [Prisma](https://www.prisma.io/)
 - [Vercel](https://vercel.com/) for the deployment
@@ -73,10 +75,23 @@ NEXTAUTH_URL=http://localhost:3000
 - Change provider variable in [schema.prisma](./prisma/schema.prisma) file
   `provider = "sqlite"`
 
+- Set your Database in the .env file, setting the DB_URL
+
+```
+DB_URL=postgres://davidpaley@localhost:5432/davidpaley # if you are using local sqlite
+```
+
 - Run the following command to create your database file.
 
 ```bash
 npx prisma migrate dev`
+```
+
+If you are using a deployed postgres DB, you could use this command to initialize the DB:
+
+```
+npx prisma db push --preview-feature
+// https://github.com/prisma/prisma/issues/4571
 ```
 
 ## Start the project in localhost
@@ -89,6 +104,4 @@ yarn dev
 npm run dev
 ```
 
-
 The server is now running on http://localhost:3000.
-
